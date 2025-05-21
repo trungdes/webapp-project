@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apartments List - BÁN.HẠT.ĐIỀU</title>
+  <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+  <header>
+    <div class="logo">BÁN.HẠT.ĐIỀU</div>
+    <nav>
+      <a href="/apartments">Buy</a>
+      <a href="#">Sell</a>
+      <a href="#">Lease</a>
+      <a href="#">Our Agents</a>
+      <a href="#">Request Valuation</a>
+      <a href="/login.html" class="btn">Login</a>
+    </nav>
+  </header>
+
+  <div class="apartments-list">
+    <h1>Available Apartments</h1>
+    <div th:each="apartment : ${apartments}" class="apartment-card">
+      <h3>Apartment #<span th:text="${apartment.apartmentNumber}"></span></h3>
+      <div class="apartment-details">
+        <div class="detail-item">
+          <img th:src="${apartment.PhotoUrl}" alt="Apartment Photo">
+          <h3>PhotoUrl: <span th:text="${apartment.PhotoUrl}"></span></h3>
+          <span class="detail-label">Bedrooms:</span>
+          <span th:text="${apartment.Bedrooms}"></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Bathrooms:</span>
+          <span th:text="${apartment.Bathrooms}"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

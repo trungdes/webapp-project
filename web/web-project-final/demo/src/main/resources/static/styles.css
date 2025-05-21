@@ -1,0 +1,155 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: #202020;
+    background-color: #fff;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .logo span {
+    color: #333;
+  }
+  nav a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #202020;
+    font-weight: 500;
+  }
+  .btn {
+    background-color: #e17049;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 30px;
+  }
+  .hero {
+    flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      
+      padding: 50px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+  }
+  .hero h1 {
+    font-size: 40px;
+    line-height: 1.3;
+    margin-bottom: 30px;
+  }
+  .highlight {
+    color: #e17049;
+  }
+  .hero a {
+    display: inline-flex;
+    align-items: center;
+    color: #202020;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 30px;
+  }
+  .hero a span {
+    margin-left: 8px;
+    font-size: 18px;
+  }
+  .hero-img img {
+    max-height: 500px;
+    min-width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+.scrolling-text {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #e17049;
+  color: white;
+  padding: 10px 0;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.scrolling-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-left 15s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.apartment-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  justify-items: center;
+  margin: 40px 0;
+}
+
+.apartment-item {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+.apartment-item:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.apartment-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.apartment-info {
+  padding: 20px;
+}
+
+.apartment-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.apartment-desc {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.apartment-price {
+  color: #e17049;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+
+
+  
+  
