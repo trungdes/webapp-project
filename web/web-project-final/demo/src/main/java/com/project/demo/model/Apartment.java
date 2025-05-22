@@ -10,14 +10,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "apartment")
+@Table(name = "apartment")      
 public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +36,9 @@ public class Apartment {
     @Column(name = "Bathrooms")
     private int bathrooms;
     
-    @Column(name = "building_id")
-    private String buildingId;
+    @ManyToOne
+    @JoinColumn(name = "building_id")
+    private Building building;
 
     @Column(name = "photo_url")
     private String photoUrl;

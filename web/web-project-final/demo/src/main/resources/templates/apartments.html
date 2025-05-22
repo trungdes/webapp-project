@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apartments List - BÁN.HẠT.ĐIỀU</title>
   <link rel="stylesheet" th:href="@{/styles.css}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body>
 
-  <header>
+  <header class="custom-nav">
     <div class="logo">BÁN.HẠT.ĐIỀU</div>
     <nav>
       <a href="/apartments">Buy</a>
-      <a href="#">Sell</a>
+      <a href="/sell">Sell</a>
       <a href="#">Lease</a>
       <a href="#">Our Agents</a>
       <a href="#">Request Valuation</a>
@@ -20,23 +22,75 @@
     </nav>
   </header>
 
-  <div class="apartments-list">
-    <h1>Available Apartments</h1>
-    <div th:each="apartment : ${apartments}" class="apartment-card">
-      <h3>Apartment #<span th:text="${apartment.apartmentNumber}"></span></h3>
-      <div class="apartment-details">
-        <div class="detail-item">
-          <img th:src="${apartment.PhotoUrl}" alt="Apartment Photo">
-          <h3>PhotoUrl: <span th:text="${apartment.PhotoUrl}"></span></h3>
-          <span class="detail-label">Bedrooms:</span>
-          <span th:text="${apartment.Bedrooms}"></span>
+  <!-- Header-->
+  <header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Find Your Dream Home</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Discover our exclusive collection of apartments</p>
         </div>
-        <div class="detail-item">
-          <span class="detail-label">Bathrooms:</span>
-          <span th:text="${apartment.Bathrooms}"></span>
-        </div>
-      </div>
     </div>
-  </div>
+  </header>
+
+  <!-- Apartments Section -->
+  <section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <!-- Apartment items -->
+            <th:block th:each="apartment : ${apartments}">
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Sale badge-->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                        <!-- Apartment image-->
+                        <img class="card-img-top" th:src="${apartment.photoUrl}" alt="Apartment Image" />
+                        <!-- Apartment details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Apartment name-->
+                                <h5 class="fw-bolder" th:text="'Apartment ' + ${apartment.apartmentNumber}"></h5>
+                                <!-- Apartment info-->
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                <!-- Apartment details-->
+                                <div class="text-muted">
+                                    <span th:text="${apartment.bedrooms + ' Bedrooms'}"></span> |
+                                    <span th:text="${apartment.bathrooms + ' Bathrooms'}"></span>
+                                </div>
+                                <!-- Building address -->
+                                <div class="text-muted mt-2">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span th:text="${apartment.building != null ? apartment.building.address : 'No address available'}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Apartment actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" th:href="@{'/apartments/' + ${apartment.apartmentNumber}}">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+  </section>
+
+  <!-- Footer-->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; BÁN.HẠT.ĐIỀU 2024</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JS-->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -4,26 +4,27 @@ body {
     color: #202020;
     background-color: #fff;
   }
-  header {
+  .custom-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 50px;
+    background-color: #fff;
   }
-  .logo {
+  .custom-nav .logo {
     font-size: 24px;
     font-weight: bold;
   }
-  .logo span {
+  .custom-nav .logo span {
     color: #333;
   }
-  nav a {
+  .custom-nav nav a {
     margin-left: 30px;
     text-decoration: none;
     color: #202020;
     font-weight: 500;
   }
-  .btn {
+  .custom-nav .btn {
     background-color: #e17049;
     color: #fff;
     padding: 12px 20px;
@@ -31,6 +32,7 @@ body {
     text-decoration: none;
     font-weight: bold;
     margin-left: 30px;
+    border: none;
   }
   .hero {
     flex: 1;
@@ -147,6 +149,10 @@ body {
   color: #e17049;
   font-weight: bold;
   font-size: 18px;
+}
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
 }
 
 
