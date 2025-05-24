@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.project.demo.dto.ApartmentDto;
+import com.project.demo.dto.BuildingDto;
 import com.project.demo.model.Apartment;
 import com.project.demo.repository.ApartmentRepository;
 import com.project.demo.service.ApartmentService;
@@ -25,13 +26,26 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private ApartmentDto mapToDto(Apartment apartment) {
-        ApartmentDto apartmentDto = ApartmentDto.builder()
-        .apartmentNumber(apartment.getApartmentNumber())
-        .bedrooms(apartment.getBedrooms())
-        .bathrooms(apartment.getBathrooms())
-        .photoUrl(apartment.getPhotoUrl())
-        .build();
-        return apartmentDto;    
-        
+        BuildingDto buildingDto = null;
+        if (apartment.getBuilding() != null) {
+            buildingDto = BuildingDto.builder()
+                .buildingId(apartment.getBuilding().getBuildingId())
+                .address(apartment.getBuilding().getAddress())
+                .build();
+        }
+
+        return ApartmentDto.builder()
+            .apartmentNumber(apartment.getApartmentNumber())
+            .bedrooms(apartment.getBedrooms())
+            .bathrooms(apartment.getBathrooms())
+            .photoUrl(apartment.getPhotoUrl())
+            .building(buildingDto)
+            .build();
+    }
+
+    @Override
+    public Apartment saveApartment(Apartment apartment) {
+        // TODO Auto-generated method stub
+        return apartmentRepository.save(apartment);
     }
 }

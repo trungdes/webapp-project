@@ -5,37 +5,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "apartment")
-public class Apartment {
+@Table(name = "building")
+public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "apartment_number")
-    private int apartmentNumber;    
-    
-    @Column(name = "Bedrooms")
-    private int bedrooms;
-    
-    @Column(name = "Bathrooms")
-    private int bathrooms;
-    
-    @ManyToOne
-    @JoinColumn(name = "building_id")
-    private Building building;
+    @Column(name = "BuildingID")
+    private String buildingId;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    @Column(name = "Address")
+    private String address;
+
+    @OneToMany(mappedBy = "building")
+    private List<Apartment> apartments;
 }

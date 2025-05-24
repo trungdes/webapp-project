@@ -10,4 +10,5 @@ public class ApartmentDto {
     private int bedrooms;
     private int bathrooms;
     private String photoUrl;
+    private BuildingDto building;
 }

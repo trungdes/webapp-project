@@ -3,6 +3,8 @@ package com.project.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.demo.service.ApartmentService;
@@ -40,5 +42,16 @@ public class ApartmentController {
         } catch (Exception e) {
             return "Database connection failed! Error: " + e.getMessage();
         }
+    }
+    @GetMapping("/sell")
+    public String createApartmentForm(Model model) {
+        Apartment apartment = new Apartment();
+        model.addAttribute("apartment", apartment);
+        return "sell";
+    }
+    @PostMapping("/new")
+    public String saveApartment(@ModelAttribute("apartment") Apartment apartment) {
+        apartmentService.saveApartment(apartment);
+        return "redirect:/sell";
     }
 }
