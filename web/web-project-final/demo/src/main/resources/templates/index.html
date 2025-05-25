@@ -1,51 +1,145 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>web ban hat dieu</title>
-  <link rel="stylesheet" th:href="@{/styles.css}">
+  <title>BÁN.NHÀ</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/styles.css">
+  
 </head>
 <body>
 
+  <!-- Clean Navigation -->
   <header class="custom-nav">
-    <div class="logo">BÁN.HẠT.ĐIỀU</div>
+    <div class="logo">BÁN.NHÀ</div>
     <nav>
       <a href="/apartments">Buy</a>
-<<<<<<< HEAD
-      <a tnh:href="@{/new}">Sell</a>
-=======
-      <a href="/sell">Sell</a>
->>>>>>> cuong
-      <a href="#">Lease</a>
-      <a href="#">Our Agents</a>
-      <a href="/login" class="btn">Request Valuation</a>
+      <a href="#about">Sell</a>
+      <a href="#contact">Lease</a>
+      <a href="#wholesale">Our Agents</a>
+      <a href="/login.html" class="btn">Request Valuation</a>
     </nav>
   </header>
 
-  <section class="hero">
-    <h1>
-        Đây là <span class="highlight">web bán hạt điều</span>
-        của Trung. Đội ngũ dev fullstack của web này được trả công bằng 
-        <span class="highlight">hạt điều chất lượng cao</span>, mong anh chủ có thể trả bằng tiền hoặc thứ gì khác chứ ăn hạt điều ngán quá...
+  <!-- Modern Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>
+        Premium <span class="highlight">Housing</span>
       </h1>
-      
-    <a href="#">
-      See hạtđiềus for Sale <span>→</span>
-    </a>
+      <p>
+        Đây là 1 web bán nhà, nếu bạn cần nhà hoặc nhiều nhà hãy mua nhà ở chúng tôi 
+        chúng tôi <span class="highlight">CHẮC CHẮN KHÔNG SCAM BẠN</span> hãy tin tưởng chúng tôi!!! 
+        giao nhà trong ngày
+      </p>
+      <a href="/apartments.html" class="hero-cta">
+        Browse Our Selection <span>→</span>
+      </a>
+    </div>
   </section>
+
+  <!-- Hero Image -->
   <div class="hero-img">
-    <img src="image/casheww.jpg" alt="Urban real estate">
+    <img src="\css\image.png" alt="Premium Cashew Nuts" />
   </div>
+
+  <!-- About Us Section -->
+  <section id="about" class="about-section">
+    <div class="about-container">
+      <div class="about-content">
+        <h2>Về Chúng Tôi</h2>
+        <p>
+          <strong>BÁN.NHÀ</strong> là công ty bất động sản hàng đầu với hơn <span class="highlight">21</span> năm kinh nghiệm trong lĩnh vực 
+          mua bán, cho thuê và đầu tư bất động sản. Chúng tôi cam kết mang đến cho khách hàng những căn nhà 
+          chất lượng cao với giá cả hợp lý nhất.
+        </p>
+        <p>
+          Với đội ngũ chuyên viên tư vấn được tuyển từ <span class="highlight">The Liems</span> và quy trình làm việc chuyên nghiệp, 
+          chúng tôi đảm bảo <span class="highlight">giao nhà trong ngày</span>
+        </p>
+        
+        <div class="about-stats">
+          <div class="stat-item">
+            <span class="stat-number">10.000+</span>
+            <span class="stat-label">Căn nhà đã bán</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">9999+</span>
+            <span class="stat-label">Khách hàng hài lòng</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">Rảnh Thì Rep <3</span>
+            <span class="stat-label">Hỗ trợ khách hàng</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100% Uy tín</span>
+            <span class="stat-label">trust me bro...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-features">
+        <ul class="feature-list">
+          <li class="feature-item">
+            <div class="feature-icon">
+              <i class="bi bi-house-check"></i>
+            </div>
+            <div class="feature-text">
+              <div class="feature-title">Chất lượng đảm bảo</div>
+              <div class="feature-desc">Tất cả căn nhà đều có vong</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <i class="bi bi-lightning"></i>
+            </div>
+            <div class="feature-text">
+              <div class="feature-title">Giao nhà nhanh chóng</div>
+              <div class="feature-desc">Sáng cọc tiền, chiều có nhà ok?</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div class="feature-text">
+              <div class="feature-title">Uy tín hàng đầu</div>
+              <div class="feature-desc">Liêm</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <i class="bi bi-gift"></i>
+            </div>
+            <div class="feature-text">
+              <div class="feature-title">Ưu đãi hấp dẫn</div>
+              <div class="feature-desc">Mua 5 nhà tặng 1 bàn ủi, nhiều chương trình khuyến mãi khác!!!</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div class="feature-text">
+              <div class="feature-title">Hỗ trợ khách hàng</div>
+              <div class="feature-desc">Không có tiền thuê...</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scrolling Banner -->
   <div class="scrolling-text">
     <span>
       <img src="image/cat-ezgif.com-rotate.gif" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
-      Bán hạt điều chất lượng cao — đội dev ăn hạt điều đến ngán luôn — Mua 5 tặng 1 — Liên hệ ngay!
+      Bán nhà —  Mua 5 nhà tặng 1 bàn ủi — Liên hệ ngay! — Donate here: MoMo (0932645xxx) Pham Minh Trung <3
       <img src="image/cat-ezgif.com-rotate.gif" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
     </span>
   </div>
-  
+
 </body>
 </html>
