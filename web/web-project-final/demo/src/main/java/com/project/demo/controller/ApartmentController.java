@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.demo.service.ApartmentService;
@@ -24,9 +25,42 @@ public class ApartmentController {
     }
 
     @GetMapping("/apartments")
-    public String showApartmentsPage(Model model) {
+    public String showApartmentsPage(
+            @RequestParam(required = false) String bedrooms,
+            @RequestParam(required = false) String bathrooms,
+            @RequestParam(required = false) String priceRange,
+            @RequestParam(required = false) String location,
+            Model model) {
+        
         List<ApartmentDto> apartments = apartmentService.findAllApartments();
-        System.out.println("Apartments: " + apartments);
+        
+        // Apply filters if parameters are present
+        if (bedrooms != null && !bedrooms.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBedrooms() == Integer.parseInt(bedrooms))
+                .toList();
+        }
+        
+        if (bathrooms != null && !bathrooms.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBathrooms() == Integer.parseInt(bathrooms))
+                .toList();
+        }
+        
+        if (priceRange != null && !priceRange.isEmpty()) {
+            String[] range = priceRange.split("-");
+            double minPrice = Double.parseDouble(range[0]);
+            double maxPrice = Double.parseDouble(range[1]);
+            // Note: You'll need to add price field to ApartmentDto if you want to filter by price
+        }
+        
+        if (location != null && !location.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBuilding() != null && 
+                       apt.getBuilding().getAddress().toLowerCase().contains(location.toLowerCase()))
+                .toList();
+        }
+        
         model.addAttribute("apartments", apartments);
         return "apartments";
     }
