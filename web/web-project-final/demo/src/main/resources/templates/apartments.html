@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,14 +38,14 @@
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center">
             
-            <!-- Apartment 1 -->
-            <div class="col mb-5">
+            <!-- Dynamic Apartment Cards -->
+            <div th:each="apartment : ${apartments}" class="col mb-5">
                 <div class="card h-100 apartment-card">
                     <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop" alt="Apartment A101" />
+                    <img class="card-img-top" th:src="${apartment.photoUrl}" th:alt="${'Apartment ' + apartment.apartmentNumber}" />
                     <div class="card-body p-4">
                         <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment A101</h5>
+                            <h5 class="fw-bolder apartment-title" th:text="${'Apartment ' + apartment.apartmentNumber}">Apartment</h5>
                             <div class="d-flex justify-content-center small star-rating mb-2">
                                 <div class="bi-star-fill"></div>
                                 <div class="bi-star-fill"></div>
@@ -54,183 +54,19 @@
                                 <div class="bi-star-fill"></div>
                             </div>
                             <div class="text-muted mb-2">
-                                <span>2 Bedrooms</span> | <span>2 Bathrooms</span>
+                                <span th:text="${apartment.bedrooms + ' Bedrooms'}">Bedrooms</span> | 
+                                <span th:text="${apartment.bathrooms + ' Bathrooms'}">Bathrooms</span>
                             </div>
                             <div class="text-muted mt-2 mb-3">
                                 <i class="bi bi-geo-alt"></i>
-                                <span>123 Main Street, Downtown</span>
+                                <span th:text="${apartment.building != null ? apartment.building.address : 'Address not available'}">Address</span>
                             </div>
-                            <div class="price">$450,000</div>
+                            <div class="price">Contact for Price</div>
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                         <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/A101">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Apartment 2 -->
-            <div class="col mb-5">
-                <div class="card h-100 apartment-card">
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop" alt="Apartment B205" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment B205</h5>
-                            <div class="d-flex justify-content-center small star-rating mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <div class="text-muted mb-2">
-                                <span>3 Bedrooms</span> | <span>2 Bathrooms</span>
-                            </div>
-                            <div class="text-muted mt-2 mb-3">
-                                <i class="bi bi-geo-alt"></i>
-                                <span>456 Oak Avenue, Midtown</span>
-                            </div>
-                            <div class="price">$620,000</div>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/B205">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Apartment 3 -->
-            <div class="col mb-5">
-                <div class="card h-100 apartment-card">
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop" alt="Apartment C302" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment C302</h5>
-                            <div class="d-flex justify-content-center small star-rating mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <div class="text-muted mb-2">
-                                <span>1 Bedroom</span> | <span>1 Bathroom</span>
-                            </div>
-                            <div class="text-muted mt-2 mb-3">
-                                <i class="bi bi-geo-alt"></i>
-                                <span>789 Pine Road, Uptown</span>
-                            </div>
-                            <div class="price">$320,000</div>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/C302">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Apartment 4 -->
-            <div class="col mb-5">
-                <div class="card h-100 apartment-card">
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=300&fit=crop" alt="Apartment D150" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment D150</h5>
-                            <div class="d-flex justify-content-center small star-rating mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <div class="text-muted mb-2">
-                                <span>4 Bedrooms</span> | <span>3 Bathrooms</span>
-                            </div>
-                            <div class="text-muted mt-2 mb-3">
-                                <i class="bi bi-geo-alt"></i>
-                                <span>321 Elm Street, Westside</span>
-                            </div>
-                            <div class="price">$850,000</div>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/D150">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Apartment 5 -->
-            <div class="col mb-5">
-                <div class="card h-100 apartment-card">
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop" alt="Apartment E401" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment E401</h5>
-                            <div class="d-flex justify-content-center small star-rating mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <div class="text-muted mb-2">
-                                <span>2 Bedrooms</span> | <span>1 Bathroom</span>
-                            </div>
-                            <div class="text-muted mt-2 mb-3">
-                                <i class="bi bi-geo-alt"></i>
-                                <span>654 Maple Drive, Eastside</span>
-                            </div>
-                            <div class="price">$480,000</div>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/E401">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Apartment 6 -->
-            <div class="col mb-5">
-                <div class="card h-100 apartment-card">
-                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                    <img class="card-img-top" src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=300&fit=crop" alt="Apartment F203" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder apartment-title">Apartment F203</h5>
-                            <div class="d-flex justify-content-center small star-rating mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                            </div>
-                            <div class="text-muted mb-2">
-                                <span>3 Bedrooms</span> | <span>2 Bathrooms</span>
-                            </div>
-                            <div class="text-muted mt-2 mb-3">
-                                <i class="bi bi-geo-alt"></i>
-                                <span>987 Cedar Lane, Southside</span>
-                            </div>
-                            <div class="price">$590,000</div>
-                        </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/apartments/F203">View Details</a>
+                            <a class="btn btn-outline-dark mt-auto" th:href="@{/apartments/{id}(id=${apartment.building != null ? apartment.building.buildingId : apartment.apartmentNumber})}">View Details</a>
                         </div>
                     </div>
                 </div>
