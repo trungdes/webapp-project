@@ -49,4 +49,11 @@ public class ApartmentServiceImpl implements ApartmentService {
         // TODO Auto-generated method stub
         return apartmentRepository.save(apartment);
     }
+
+    @Override
+    public ApartmentDto findApartmentByBuildingId(String buildingId) {
+        Apartment apartment = apartmentRepository.findByBuildingBuildingId(buildingId)
+            .orElseThrow(() -> new RuntimeException("Apartment not found for building: " + buildingId));
+        return mapToDto(apartment);
+    }
 }
