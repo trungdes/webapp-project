@@ -10,5 +10,5 @@ public interface ApartmentService {
 
     Apartment saveApartment(Apartment apartment);
 
-    ApartmentDto findApartmentByBuildingId(String buildingId);
+    List<ApartmentDto> findApartmentByBuildingId(String buildingId);
 }
