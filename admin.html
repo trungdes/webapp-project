@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - BÁN.NHÀ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 15px 20px;
+            margin: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #3498db;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            padding: 3px 6px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+        }
+
+        .card {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .status-active {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .status-pending {
+            background-color: #f1c40f;
+            color: white;
+        }
+
+        .status-expired {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .sidebar .nav {
+            padding: 0 10px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar col-md-3 col-lg-2">
+        <div class="text-center mb-4">
+            <h3>BÁN.NHÀ</h3>
+            <p>Admin Panel</p>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#apartments" data-bs-toggle="tab">
+                    <i class="bi bi-building me-2"></i> Apartments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#leases" data-bs-toggle="tab">
+                    <i class="bi bi-file-text me-2"></i> Lease Contracts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#viewings" data-bs-toggle="tab">
+                    <i class="bi bi-calendar-check me-2"></i> Viewing Schedule
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#notifications" data-bs-toggle="tab">
+                    <i class="bi bi-bell me-2"></i> Notifications
+                    <span class="notification-badge">3</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="tab-content">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard">
+                <h2 class="mb-4">Dashboard Overview</h2>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Apartments</h5>
+                                <h2 class="card-text">42</h2>
+                                <p class="text-muted">8 available</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Active Leases</h5>
+                                <h2 class="card-text">28</h2>
+                                <p class="text-muted">3 pending renewal</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Scheduled Viewings</h5>
+                                <h2 class="card-text">12</h2>
+                                <p class="text-muted">Today: 3</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">New Notifications</h5>
+                                <h2 class="card-text">3</h2>
+                                <p class="text-muted">2 urgent</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apartments Tab -->
+            <div class="tab-pane fade" id="apartments">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Apartment Management</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editApartmentModal">
+                        <i class="bi bi-plus-lg"></i> Add New Apartment
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Apartment</th>
+                                <th>Building</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A101</td>
+                                <td>Luxury Suite</td>
+                                <td>Landmark 81</td>
+                                <td><span class="status-badge status-active">Available</span></td>
+                                <td>$1,200,000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editApartmentModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- More apartment rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lease Contracts Tab -->
+            <div class="tab-pane fade" id="leases">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Lease Contracts</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newLeaseModal">
+                        <i class="bi bi-plus-lg"></i> New Lease Contract
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Contract ID</th>
+                                <th>Tenant</th>
+                                <th>Apartment</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LC001</td>
+                                <td>John Doe</td>
+                                <td>A101</td>
+                                <td>2024-01-01</td>
+                                <td>2024-12-31</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- More lease rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Viewing Schedule Tab -->
+            <div class="tab-pane fade" id="viewings">
+                <h2 class="mb-4">Viewing Schedule</h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Today's Viewings</h5>
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1">A101 - Landmark 81</h6>
+                                            <small>10:00 AM</small>
+                                        </div>
+                                        <p class="mb-1">John Doe</p>
+                                        <small>Contact: +1234567890</small>
+                                    </a>
+                                    <!-- More viewing items -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div class="tab-pane fade" id="notifications">
+                <h2 class="mb-4">Notifications</h2>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">New Viewing Request</h6>
+                            <small class="text-muted">3 minutes ago</small>
+                        </div>
+                        <p class="mb-1">New viewing request for Apartment A101</p>
+                        <small class="text-muted">From: Jane Smith</small>
+                    </a>
+                    <!-- More notification items -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Apartment Modal -->
+    <div class="modal fade" id="editApartmentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Apartment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Apartment ID</label>
+                                <input type="text" class="form-control" value="A101">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Building</label>
+                                <select class="form-select">
+                                    <option>Landmark 81</option>
+                                    <option>Empire State</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Price</label>
+                                <input type="number" class="form-control" value="1200000">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select">
+                                    <option>Available</option>
+                                    <option>Rented</option>
+                                    <option>Under Maintenance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Bedrooms</label>
+                                <input type="number" class="form-control" min="0" value="3">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Bathrooms</label>
+                                <input type="number" class="form-control" min="0" step="0.5" value="2">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Living Area (m²)</label>
+                                <input type="number" class="form-control" min="0" value="120">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Amenities</label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity1">
+                                        <label class="form-check-label" for="amenity1">Swimming Pool</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity2">
+                                        <label class="form-check-label" for="amenity2">Gym</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity3">
+                                        <label class="form-check-label" for="amenity3">Parking</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity4">
+                                        <label class="form-check-label" for="amenity4">24/7 Security</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity5">
+                                        <label class="form-check-label" for="amenity5">Air Conditioning</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity6">
+                                        <label class="form-check-label" for="amenity6">Balcony</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity7">
+                                        <label class="form-check-label" for="amenity7">Pet Friendly</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity8">
+                                        <label class="form-check-label" for="amenity8">Furnished</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="amenity9">
+                                        <label class="form-check-label" for="amenity9">Garden Access</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Images</label>
+                            <input type="file" class="form-control" multiple>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Lease Modal -->
+    <div class="modal fade" id="newLeaseModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Lease Contract</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Tenant Name</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Apartment</label>
+                                <select class="form-select">
+                                    <option>A101 - Landmark 81</option>
+                                    <option>B202 - Empire State</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Monthly Rent</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Security Deposit</label>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Special Terms</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Create Lease</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and other scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html> 
