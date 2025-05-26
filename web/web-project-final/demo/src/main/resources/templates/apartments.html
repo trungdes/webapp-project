@@ -174,11 +174,10 @@
                                 <span th:text="${apartment.bedrooms + ' Bedrooms'}">Bedrooms</span> | 
                                 <span th:text="${apartment.bathrooms + ' Bathrooms'}">Bathrooms</span>
                             </div>
-                            <div class="text-muted mt-2 mb-3">
+                            <div class="text-muted mt-2">
                                 <i class="bi bi-geo-alt"></i>
                                 <span th:text="${apartment.building != null ? apartment.building.address : 'Address not available'}">Address</span>
                             </div>
-                            <div class="price">Contact for Price</div>
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">

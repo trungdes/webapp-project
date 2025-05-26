@@ -21,7 +21,6 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public List<ApartmentDto> findAllApartments() {
-        // TODO Auto-generated method stub
         List<Apartment> apartments = apartmentRepository.findAll();
         return apartments.stream().map(apartment -> mapToDto(apartment)).collect(Collectors.toList());
     }
@@ -46,14 +45,14 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public Apartment saveApartment(Apartment apartment) {
-        // TODO Auto-generated method stub
         return apartmentRepository.save(apartment);
     }
 
     @Override
-    public ApartmentDto findApartmentByBuildingId(String buildingId) {
-        Apartment apartment = apartmentRepository.findByBuildingBuildingId(buildingId)
-            .orElseThrow(() -> new RuntimeException("Apartment not found for building: " + buildingId));
-        return mapToDto(apartment);
+    public List<ApartmentDto> findApartmentByBuildingId(String buildingId) {
+        List<Apartment> apartments = apartmentRepository.findByBuildingBuildingId(buildingId);
+        return apartments.stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
     }
 }

@@ -93,10 +93,11 @@ public class ApartmentController {
         apartmentService.saveApartment(apartment);
         return "redirect:/sell";
     }
+
     @GetMapping("/apartments/{id}")
     public String apartmentDetail(@PathVariable("id") String id, Model model) {
-        ApartmentDto apartment = apartmentService.findApartmentByBuildingId(id);
-        model.addAttribute("apartment", apartment);
+        List<ApartmentDto> apartments = apartmentService.findApartmentByBuildingId(id);
+        model.addAttribute("apartments", apartments);
         return "apartment-detail";
     }
 }

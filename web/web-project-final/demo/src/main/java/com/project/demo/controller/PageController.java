@@ -9,4 +9,10 @@ public class PageController {
     public String ourAgentPage() {
         return "our-agent";
     }
+
+    @GetMapping("viewdetails")
+    public String viewdetails() {
+        return "viewdetails";
+    }
 }
+
