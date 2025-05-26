@@ -34,7 +34,7 @@ public class ApartmentController {
         
         List<ApartmentDto> apartments = apartmentService.findAllApartments();
         
-        // Apply filters if parameters are present
+        
         if (bedrooms != null && !bedrooms.isEmpty()) {
             apartments = apartments.stream()
                 .filter(apt -> apt.getBedrooms() == Integer.parseInt(bedrooms))
@@ -51,7 +51,7 @@ public class ApartmentController {
             String[] range = priceRange.split("-");
             double minPrice = Double.parseDouble(range[0]);
             double maxPrice = Double.parseDouble(range[1]);
-            // Note: You'll need to add price field to ApartmentDto if you want to filter by price
+            
         }
         
         if (location != null && !location.isEmpty()) {
