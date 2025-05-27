@@ -19,7 +19,14 @@
       <a href="/sell">Sell</a>
       <a href="#contact">Lease</a>
       <a href="/our-agent">Our Agents</a>
-      <a href="/login.html" class="btn">Login</a>
+      <th:block th:if="${session.user == null}">
+        <button class="btn" onclick="showLoginModal()">Login</button>
+      </th:block>
+      <th:block th:if="${session.user != null}">
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </th:block>
     </nav>
   </header>
 
@@ -140,6 +147,35 @@
       <img src="image/cat-ezgif.com-rotate.gif" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
     </span>
   </div>
+
+  <!-- Modal Login -->
+  <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+    <div style="background:white; padding:30px; border-radius:8px; min-width:300px; margin:100px auto; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+      <h2>Đăng nhập</h2>
+      <form method="post" action="/login">
+        <input type="text" name="username" placeholder="Username" class="form-control mb-2" required><br>
+        <input type="password" name="password" placeholder="Password" class="form-control mb-2" required><br>
+        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+        <button type="button" class="btn btn-secondary" onclick="hideLoginModal()">Đóng</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  function showLoginModal() {
+    document.getElementById('loginModal').style.display = 'flex';
+  }
+  function hideLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+  }
+  // Đóng modal khi nhấn ra ngoài
+  window.onclick = function(event) {
+    var modal = document.getElementById('loginModal');
+    if (event.target === modal) {
+      hideLoginModal();
+    }
+  }
+  </script>
 
 </body>
 </html>
