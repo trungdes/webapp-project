@@ -149,18 +149,64 @@
   </div>
 
   <!-- Modal Login -->
-  <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
-    <div style="background:white; padding:30px; border-radius:8px; min-width:300px; margin:100px auto; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-      <h2>Đăng nhập</h2>
-      <form method="post" action="/login">
-        <input type="text" name="username" placeholder="Username" class="form-control mb-2" required><br>
-        <input type="password" name="password" placeholder="Password" class="form-control mb-2" required><br>
-        <button type="submit" class="btn btn-primary">Đăng nhập</button>
-        <a href="/register" class="btn btn-secondary">Đăng ký</a>
-        <button type="button" class="btn btn-secondary" onclick="hideLoginModal()">Đóng</button>
+  <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:1000;">
+    <div class="login-modal-content" style="background:white; padding:40px; border-radius:15px; min-width:400px; max-width:90%; margin:20px auto; box-shadow:0 4px 20px rgba(0,0,0,0.2); position:relative;">
+      <button type="button" class="modal-close-btn" onclick="hideLoginModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; font-size:24px; cursor:pointer; color:#666;">&times;</button>
+      
+      <div style="text-align:center; margin-bottom:30px;">
+        <h2 style="color:#333; font-size:28px; margin-bottom:10px;">Welcome Back</h2>
+        <p style="color:#666; margin-bottom:25px;">Please login to your account</p>
+      </div>
+
+      <form method="post" action="/login" style="display:flex; flex-direction:column; gap:20px;">
+        <div class="form-group" style="position:relative;">
+          <i class="bi bi-person" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
+          <input type="text" name="username" placeholder="Username" class="form-control" required 
+                 style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
+        </div>
+
+        <div class="form-group" style="position:relative;">
+          <i class="bi bi-lock" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
+          <input type="password" name="password" placeholder="Password" class="form-control" required 
+                 style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit" class="btn btn-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase;">Login</button>
+          <a href="/register" class="btn btn-outline-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase; text-decoration:none; text-align:center;">Register</a>
+        </div>
       </form>
     </div>
   </div>
+
+  <style>
+    .login-modal-content {
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-control:focus {
+      border-color: #007bff !important;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.25) !important;
+      outline: none;
+    }
+
+    .modal-close-btn:hover {
+      color: #333;
+      transform: rotate(90deg);
+      transition: all 0.3s;
+    }
+  </style>
 
   <script>
   function showLoginModal() {
