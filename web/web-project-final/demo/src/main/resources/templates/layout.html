@@ -1,12 +1,112 @@
 <!DOCTYPE html>
-<html lang = "en" 
-xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{layout}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-    <link th:href="@{/styles.css}" rel="stylesheet" />
-    <title>Apartment Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - BÁN.NHÀ">BÁN.NHÀ</title>
+    
+    <!-- Common CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    
+    <!-- Additional CSS -->
+    <th:block layout:fragment="css"></th:block>
 </head>
+<body>
+    <!-- Navigation -->
+    <header class="custom-nav">
+        <a th:href="@{/}" style="text-decoration: none; color: inherit;">
+            <div class="logo">BÁN.NHÀ</div>
+        </a>
+        <nav>
+            <a th:href="@{/apartments}">Buy</a>
+            <a th:href="@{/sell}">Sell</a>
+            <a th:href="@{/lease}">Lease</a>
+            <a th:href="@{/our-agent}">Our Agents</a>
+            <div sec:authorize="!isAuthenticated()">
+                <button class="btn" onclick="showLoginModal()">Login</button>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Error Messages -->
+    <div th:if="${param.error}" class="alert alert-danger" style="text-align:center;">
+        Sai tài khoản hoặc mật khẩu!
+    </div>
+    <div th:if="${param.expired}" class="alert alert-warning" style="text-align:center;">
+        Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.
+    </div>
+
+    <!-- Main Content -->
+    <main layout:fragment="content">
+        <!-- Page content will be inserted here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; BÁN.NHÀ 2025</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:1000;">
+        <div class="login-modal-content" style="background:white; padding:40px; border-radius:15px; min-width:400px; max-width:90%; margin:20px auto; box-shadow:0 4px 20px rgba(0,0,0,0.2); position:relative;">
+            <button type="button" class="modal-close-btn" onclick="hideLoginModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; font-size:24px; cursor:pointer; color:#666;">&times;</button>
+            
+            <div style="text-align:center; margin-bottom:30px;">
+                <h2 style="color:#333; font-size:28px; margin-bottom:10px;">Welcome Back</h2>
+                <p style="color:#666; margin-bottom:25px;">Please login to your account</p>
+            </div>
+
+            <form th:action="@{/login}" method="post" style="display:flex; flex-direction:column; gap:20px;">
+                <div class="form-group" style="position:relative;">
+                    <i class="bi bi-person" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
+                    <input type="text" name="username" placeholder="Username" class="form-control" required 
+                           style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
+                </div>
+
+                <div class="form-group" style="position:relative;">
+                    <i class="bi bi-lock" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
+                    <input type="password" name="password" placeholder="Password" class="form-control" required 
+                           style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="submit" class="btn btn-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase;">Login</button>
+                    <a th:href="@{/register}" class="btn btn-outline-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase; text-decoration:none; text-align:center;">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Common Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Login Modal Scripts -->
+    <script>
+    function showLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+    function hideLoginModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+        var modal = document.getElementById('loginModal');
+        if (event.target === modal) {
+            hideLoginModal();
+        }
+    }
+    </script>
+
+    <!-- Additional Scripts -->
+    <th:block layout:fragment="scripts"></th:block>
+</body>
 </html>

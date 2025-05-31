@@ -1,667 +1,572 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Agents - BÁN.NHÀ</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <style>
-    .agent-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: none;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+    <title>Our Agents - BÁN.NHÀ</title>
+    <th:block layout:fragment="css">
+        <style>
+            .agent-card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
 
-    .agent-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
+            .agent-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
 
-    .agent-photo {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 8px 8px 0 0;
-    }
+            .agent-photo {
+                width: 100%;
+                height: 250px;
+                object-fit: cover;
+                border-radius: 8px 8px 0 0;
+            }
 
-    .agent-name {
-      color: #2c3e50;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
+            .agent-name {
+                color: #2c3e50;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
 
-    .agent-title {
-      color: #3498db;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.75rem;
-    }
+            .agent-title {
+                color: #3498db;
+                font-size: 0.9rem;
+                font-weight: 500;
+                margin-bottom: 0.75rem;
+            }
 
-    .agent-stats {
-      display: flex;
-      justify-content: space-between;
-      margin: 1rem 0;
-      padding: 0.75rem;
-      background: #f8f9fa;
-      border-radius: 6px;
-    }
+            .agent-stats {
+                display: flex;
+                justify-content: space-between;
+                margin: 1rem 0;
+                padding: 0.75rem;
+                background: #f8f9fa;
+                border-radius: 6px;
+            }
 
-    .stat-item {
-      text-align: center;
-      flex: 1;
-    }
+            .stat-item {
+                text-align: center;
+                flex: 1;
+            }
 
-    .stat-number {
-      font-weight: 700;
-      color: #2c3e50;
-      font-size: 1.1rem;
-      display: block;
-    }
+            .stat-number {
+                font-weight: 700;
+                color: #2c3e50;
+                font-size: 1.1rem;
+                display: block;
+            }
 
-    .stat-label {
-      font-size: 0.75rem;
-      color: #6c757d;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+            .stat-label {
+                font-size: 0.75rem;
+                color: #6c757d;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
 
-    .contact-info {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-      color: #6c757d;
-    }
+            .contact-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+                color: #6c757d;
+            }
 
-    .contact-info i {
-      margin-right: 0.5rem;
-      width: 16px;
-      color: #3498db;
-    }
+            .contact-info i {
+                margin-right: 0.5rem;
+                width: 16px;
+                color: #3498db;
+            }
 
-    .specialties {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      margin-bottom: 1rem;
-    }
+            .specialties {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                margin-bottom: 1rem;
+            }
 
-    .specialty-tag {
-      background: #e3f2fd;
-      color: #1976d2;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
+            .specialty-tag {
+                background: #e3f2fd;
+                color: #1976d2;
+                padding: 0.25rem 0.5rem;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
 
-    .rating {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
+            .rating {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            }
 
-    .rating .stars {
-      color: #ffc107;
-      margin-right: 0.5rem;
-    }
+            .rating .stars {
+                color: #ffc107;
+                margin-right: 0.5rem;
+            }
 
-    .rating-text {
-      font-size: 0.9rem;
-      color: #6c757d;
-    }
+            .rating-text {
+                font-size: 0.9rem;
+                color: #6c757d;
+            }
 
-    .btn-contact {
-      background: #3498db;
-      border: none;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: background 0.3s ease;
-      width: 100%;
-    }
+            .btn-contact {
+                background: #3498db;
+                border: none;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                font-weight: 500;
+                transition: background 0.3s ease;
+                width: 100%;
+            }
 
-    .btn-contact:hover {
-      background: #2980b9;
-      color: white;
-    }
+            .btn-contact:hover {
+                background: #2980b9;
+                color: white;
+            }
 
-    .hero-section {
-      background: #1E1F26;
-      color: white;
-      padding: 4rem 0;
-      text-align: center;
-    }
+            .hero-section {
+                background: #1E1F26;
+                color: white;
+                padding: 4rem 0;
+                text-align: center;
+            }
 
-    .hero-section h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
+            .hero-section h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
 
-    .hero-section p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+            .hero-section p {
+                font-size: 1.1rem;
+                opacity: 0.9;
+                max-width: 600px;
+                margin: 0 auto;
+            }
 
-    .section-title {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
+            .section-title {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
 
-    .section-title h2 {
-      color: #2c3e50;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+            .section-title h2 {
+                color: #2c3e50;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
 
-    .section-title p {
-      color: #6c757d;
-      font-size: 1.1rem;
-    }
+            .section-title p {
+                color: #6c757d;
+                font-size: 1.1rem;
+            }
 
-    .custom-nav {
-      background: #fff;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+            @media (max-width: 768px) {
+                .hero-section h1 {
+                    font-size: 2rem;
+                }
 
-    .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #1f2937;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-    }
+                .agent-stats {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
 
-    .custom-nav nav {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .custom-nav nav a {
-      text-decoration: none;
-      color: #6b7280;
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: color 0.2s ease;
-    }
-
-    .custom-nav nav a:hover {
-      color: #1f2937;
-    }
-
-    .custom-nav nav .btn {
-      background: #2563eb;
-      color: white;
-      padding: 0.6rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      transition: background 0.2s ease;
-    }
-
-    .custom-nav nav .btn:hover {
-      background: #1d4ed8;
-      color: white;
-    }
-
-    @media (max-width: 768px) {
-      .custom-nav {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-      }
-
-      .custom-nav nav {
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .hero-section h1 {
-        font-size: 2rem;
-      }
-
-      .agent-stats {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .stat-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-  </style>
+                .stat-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+            }
+        </style>
+    </th:block>
 </head>
 <body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container px-4 px-lg-5">
+                <h1>Meet Our Expert Team</h1>
+                <p>Đội ngũ chuyên viên bất động sản giàu kinh nghiệm, tận tâm và chuyên nghiệp. Chúng tôi cam kết mang đến cho bạn dịch vụ tốt nhất!</p>
+            </div>
+        </section>
 
-  <!-- Navigation -->
-  <header class="custom-nav">
-    <a href="/" style="text-decoration: none; color: inherit;">
-      <div class="logo">BÁN.NHÀ</div>
-    </a>
-    <nav>
-      <a href="/apartments">Buy</a>
-      <a href="/sell">Sell</a>
-      <a href="#">Lease</a>
-      <a href="#">Our Agents</a>
-      <a href="/login" class="btn">Login</a>
-    </nav>
-  </header>
+        <!-- Agents Section -->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5">
+                <div class="section-title">
+                    <h2>Our Professional Agents</h2>
+                    <p>Experienced professionals ready to help you find your dream home</p>
+                </div>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="container px-4 px-lg-5">
-      <h1>Meet Our Expert Team</h1>
-      <p>Đội ngũ chuyên viên bất động sản giàu kinh nghiệm, tận tâm và chuyên nghiệp. Chúng tôi cam kết mang đến cho bạn dịch vụ tốt nhất!</p>
+                <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center">
+                    <!-- Agent 1 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop&crop=face" alt="Nguyễn Văn An" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Nguyễn Văn An</h5>
+                                <div class="agent-title">Senior Real Estate Consultant</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <span class="rating-text">5.0 (127 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">Luxury Homes</span>
+                                    <span class="specialty-tag">Investment</span>
+                                    <span class="specialty-tag">Commercial</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">150+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">5</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">98%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 901 234 567</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>an.nguyen@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>District 1, Ho Chi Minh City</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent 2 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=250&fit=crop&crop=face" alt="Trần Thị Bình" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Trần Thị Bình</h5>
+                                <div class="agent-title">Property Investment Specialist</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <span class="rating-text">4.9 (89 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">Apartments</span>
+                                    <span class="specialty-tag">First-time Buyers</span>
+                                    <span class="specialty-tag">Rentals</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">120+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">4</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">95%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 902 345 678</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>binh.tran@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>District 3, Ho Chi Minh City</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent 3 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=250&fit=crop&crop=face" alt="Lê Minh Cường" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Lê Minh Cường</h5>
+                                <div class="agent-title">Commercial Real Estate Expert</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </div>
+                                    <span class="rating-text">4.8 (156 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">Commercial</span>
+                                    <span class="specialty-tag">Office Space</span>
+                                    <span class="specialty-tag">Industrial</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">200+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">7</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">99%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 903 456 789</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>cuong.le@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>District 7, Ho Chi Minh City</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent 4 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=250&fit=crop&crop=face" alt="Phạm Thị Dung" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Phạm Thị Dung</h5>
+                                <div class="agent-title">Residential Sales Manager</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <span class="rating-text">5.0 (203 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">Family Homes</span>
+                                    <span class="specialty-tag">Condos</span>
+                                    <span class="specialty-tag">Relocation</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">180+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">6</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">97%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 904 567 890</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>dung.pham@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>District 2, Ho Chi Minh City</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent 5 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=250&fit=crop&crop=face" alt="Hoàng Văn Em" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Hoàng Văn Em</h5>
+                                <div class="agent-title">Luxury Property Consultant</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </div>
+                                    <span class="rating-text">4.7 (94 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">Luxury Villas</span>
+                                    <span class="specialty-tag">Penthouses</span>
+                                    <span class="specialty-tag">High-end</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">85+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">3</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">96%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 905 678 901</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>em.hoang@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>Thao Dien, District 2</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent 6 -->
+                    <div class="col mb-5">
+                        <div class="card h-100 agent-card">
+                            <img class="agent-photo" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=250&fit=crop&crop=face" alt="Ngô Thị Phương" />
+                            <div class="card-body p-4">
+                                <h5 class="agent-name">Ngô Thị Phương</h5>
+                                <div class="agent-title">New Development Specialist</div>
+                                
+                                <div class="rating">
+                                    <div class="stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                    </div>
+                                    <span class="rating-text">4.9 (112 reviews)</span>
+                                </div>
+
+                                <div class="specialties">
+                                    <span class="specialty-tag">New Projects</span>
+                                    <span class="specialty-tag">Pre-sales</span>
+                                    <span class="specialty-tag">Investment</span>
+                                </div>
+
+                                <div class="agent-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">110+</span>
+                                        <span class="stat-label">Sold</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">4</span>
+                                        <span class="stat-label">Years</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">94%</span>
+                                        <span class="stat-label">Success</span>
+                                    </div>
+                                </div>
+
+                                <div class="contact-info">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>+84 906 789 012</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>phuong.ngo@banha.vn</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="bi bi-geo-alt"></i>
+                                    <span>District 9, Ho Chi Minh City</span>
+                                </div>
+                            </div>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn-contact">
+                                    <i class="bi bi-chat-dots me-2"></i>Contact Agent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </section>
-
-  <!-- Agents Section -->
-  <section class="py-5">
-    <div class="container px-4 px-lg-5">
-      <div class="section-title">
-        <h2>Our Professional Agents</h2>
-        <p>Experienced professionals ready to help you find your dream home</p>
-      </div>
-
-      <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center">
-        
-        <!-- Agent 1 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop&crop=face" alt="Nguyễn Văn An" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Nguyễn Văn An</h5>
-              <div class="agent-title">Senior Real Estate Consultant</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                </div>
-                <span class="rating-text">5.0 (127 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">Luxury Homes</span>
-                <span class="specialty-tag">Investment</span>
-                <span class="specialty-tag">Commercial</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">150+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">5</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">98%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 901 234 567</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>an.nguyen@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>District 1, Ho Chi Minh City</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent 2 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=250&fit=crop&crop=face" alt="Trần Thị Bình" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Trần Thị Bình</h5>
-              <div class="agent-title">Property Investment Specialist</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                </div>
-                <span class="rating-text">4.9 (89 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">Apartments</span>
-                <span class="specialty-tag">First-time Buyers</span>
-                <span class="specialty-tag">Rentals</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">120+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">4</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">95%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 902 345 678</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>binh.tran@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>District 3, Ho Chi Minh City</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent 3 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=250&fit=crop&crop=face" alt="Lê Minh Cường" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Lê Minh Cường</h5>
-              <div class="agent-title">Commercial Real Estate Expert</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-half"></i>
-                </div>
-                <span class="rating-text">4.8 (156 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">Commercial</span>
-                <span class="specialty-tag">Office Space</span>
-                <span class="specialty-tag">Industrial</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">200+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">7</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">99%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 903 456 789</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>cuong.le@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>District 7, Ho Chi Minh City</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent 4 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=250&fit=crop&crop=face" alt="Phạm Thị Dung" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Phạm Thị Dung</h5>
-              <div class="agent-title">Residential Sales Manager</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                </div>
-                <span class="rating-text">5.0 (203 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">Family Homes</span>
-                <span class="specialty-tag">Condos</span>
-                <span class="specialty-tag">Relocation</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">180+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">6</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">97%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 904 567 890</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>dung.pham@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>District 2, Ho Chi Minh City</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent 5 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=250&fit=crop&crop=face" alt="Hoàng Văn Em" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Hoàng Văn Em</h5>
-              <div class="agent-title">Luxury Property Consultant</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-half"></i>
-                </div>
-                <span class="rating-text">4.7 (94 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">Luxury Villas</span>
-                <span class="specialty-tag">Penthouses</span>
-                <span class="specialty-tag">High-end</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">85+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">3</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">96%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 905 678 901</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>em.hoang@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>Thao Dien, District 2</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent 6 -->
-        <div class="col mb-5">
-          <div class="card h-100 agent-card">
-            <img class="agent-photo" src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=250&fit=crop&crop=face" alt="Ngô Thị Phương" />
-            <div class="card-body p-4">
-              <h5 class="agent-name">Ngô Thị Phương</h5>
-              <div class="agent-title">New Development Specialist</div>
-              
-              <div class="rating">
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                </div>
-                <span class="rating-text">4.9 (112 reviews)</span>
-              </div>
-
-              <div class="specialties">
-                <span class="specialty-tag">New Projects</span>
-                <span class="specialty-tag">Pre-sales</span>
-                <span class="specialty-tag">Investment</span>
-              </div>
-
-              <div class="agent-stats">
-                <div class="stat-item">
-                  <span class="stat-number">110+</span>
-                  <span class="stat-label">Sold</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">4</span>
-                  <span class="stat-label">Years</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">94%</span>
-                  <span class="stat-label">Success</span>
-                </div>
-              </div>
-
-              <div class="contact-info">
-                <i class="bi bi-telephone"></i>
-                <span>+84 906 789 012</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-envelope"></i>
-                <span>phuong.ngo@banha.vn</span>
-              </div>
-              <div class="contact-info">
-                <i class="bi bi-geo-alt"></i>
-                <span>District 9, Ho Chi Minh City</span>
-              </div>
-            </div>
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-              <button class="btn-contact">
-                <i class="bi bi-chat-dots me-2"></i>Contact Agent
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-5 bg-dark">
-    <div class="container">
-      <p class="m-0 text-center text-white">Copyright &copy; BÁN.NHÀ 2025</p>
-    </div>
-  </footer>
-
-  <!-- Bootstrap core JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

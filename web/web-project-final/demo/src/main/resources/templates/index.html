@@ -1,228 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BÁN.NHÀ</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/styles.css">
-  
+    <title>Home</title>
+    <th:block layout:fragment="css">
+        <style>
+            .hero-section {
+                padding: 4rem 0;
+                background: linear-gradient(135deg, #1B2B3B 0%, #2C3E50 100%);
+                color: white;
+            }
+            .hero-content {
+                max-width: 800px;
+                margin: 0 auto;
+                text-align: center;
+                padding: 2rem;
+            }
+            .hero-content h1 {
+                font-size: 3.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .highlight {
+                color: #3498db;
+            }
+            .hero-cta {
+                display: inline-block;
+                padding: 1rem 2rem;
+                background: #3498db;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                margin-top: 2rem;
+                transition: all 0.3s ease;
+            }
+            .hero-cta:hover {
+                background: #2980b9;
+                transform: translateY(-2px);
+            }
+            .about-section {
+                padding: 4rem 0;
+                background: #f8f9fa;
+            }
+            .about-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+            .about-content {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
+            .about-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 2rem;
+                margin-top: 3rem;
+            }
+            .stat-item {
+                text-align: center;
+            }
+            .stat-number {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #3498db;
+                margin-bottom: 0.5rem;
+            }
+            .stat-label {
+                color: #666;
+            }
+            .feature-list {
+                list-style: none;
+                padding: 0;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+            }
+            .feature-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.5rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .feature-icon {
+                font-size: 2rem;
+                color: #3498db;
+            }
+            .feature-title {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+            .feature-desc {
+                color: #666;
+            }
+            .scrolling-text {
+                background: #1B2B3B;
+                color: white;
+                padding: 1rem 0;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            .scrolling-text span {
+                display: inline-block;
+                animation: scroll 20s linear infinite;
+            }
+            @keyframes scroll {
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
+            }
+        </style>
+    </th:block>
 </head>
 <body>
+    <div layout:fragment="content">
+        <!-- Modern Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>
+                    Premium <span class="highlight">Housing</span>
+                </h1>
+                <p>
+                    Đây là 1 web bán nhà, nếu bạn cần nhà hoặc nhiều nhà hãy mua nhà ở chúng tôi 
+                    chúng tôi <span class="highlight">CHẮC CHẮN KHÔNG SCAM BẠN</span> hãy tin tưởng chúng tôi!!! 
+                    giao nhà trong ngày
+                </p>
+                <a th:href="@{/apartments}" class="hero-cta">
+                    Browse Our Selection <span>→</span>
+                </a>
+            </div>
+        </section>
 
-  <!-- Clean Navigation -->
-  <header class="custom-nav">
-    <div class="logo">BÁN.NHÀ</div>
-    <nav>
-      <a href="/apartments">Buy</a>
-      <a href="/sell">Sell</a>
-      <a href="#contact">Lease</a>
-      <a href="/our-agent">Our Agents</a>
-      <th:block th:if="${session.user == null}">
-        <button class="btn" onclick="showLoginModal()">Login</button>
-      </th:block>
-      <th:block th:if="${session.user != null}">
-        <form th:action="@{/logout}" method="post" style="display:inline;">
-          <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-      </th:block>
-    </nav>
-  </header>
+        <!-- Hero Image -->
+        <div class="hero-img">
+            <img th:src="@{/css/image.png}" alt="Premium Housing" />
+        </div>
 
-  <!-- Modern Hero Section -->
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1>
-        Premium <span class="highlight">Housing</span>
-      </h1>
-      <p>
-        Đây là 1 web bán nhà, nếu bạn cần nhà hoặc nhiều nhà hãy mua nhà ở chúng tôi 
-        chúng tôi <span class="highlight">CHẮC CHẮN KHÔNG SCAM BẠN</span> hãy tin tưởng chúng tôi!!! 
-        giao nhà trong ngày
-      </p>
-      <a href="/apartments.html" class="hero-cta">
-        Browse Our Selection <span>→</span>
-      </a>
+        <!-- About Us Section -->
+        <section id="about" class="about-section">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2>Về Chúng Tôi</h2>
+                    <p>
+                        <strong>BÁN.NHÀ</strong> là công ty bất động sản hàng đầu với hơn <span class="highlight">21</span> năm kinh nghiệm trong lĩnh vực 
+                        mua bán, cho thuê và đầu tư bất động sản. Chúng tôi cam kết mang đến cho khách hàng những căn nhà 
+                        chất lượng cao với giá cả hợp lý nhất.
+                    </p>
+                    <p>
+                        Với đội ngũ chuyên viên tư vấn được tuyển từ <span class="highlight">The Liems</span> và quy trình làm việc chuyên nghiệp, 
+                        chúng tôi đảm bảo <span class="highlight">giao nhà trong ngày</span>
+                    </p>
+                    
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10.000+</span>
+                            <span class="stat-label">Căn nhà đã bán</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">9999+</span>
+                            <span class="stat-label">Khách hàng hài lòng</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">Rảnh Thì Rep <3</span>
+                            <span class="stat-label">Hỗ trợ khách hàng</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100% Uy tín</span>
+                            <span class="stat-label">trust me bro...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-features">
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-house-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Chất lượng đảm bảo</div>
+                                <div class="feature-desc">Tất cả căn nhà đều có vong</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-lightning"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Giao nhà nhanh chóng</div>
+                                <div class="feature-desc">Sáng cọc tiền, chiều có nhà ok?</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Uy tín hàng đầu</div>
+                                <div class="feature-desc">Liêm</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-gift"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Ưu đãi hấp dẫn</div>
+                                <div class="feature-desc">Mua 5 nhà tặng 1 bàn ủi, nhiều chương trình khuyến mãi khác!!!</div>
+                            </div>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-headset"></i>
+                            </div>
+                            <div class="feature-text">
+                                <div class="feature-title">Hỗ trợ khách hàng</div>
+                                <div class="feature-desc">Không có tiền thuê...</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scrolling Banner -->
+        <div class="scrolling-text">
+            <span>
+                <img th:src="@{/image/cat-ezgif.com-rotate.gif}" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
+                Bán nhà —  Mua 5 nhà tặng 1 bàn ủi — Liên hệ ngay! — Donate here: MoMo (0932645xxx) Pham Minh Trung <3
+                <img th:src="@{/image/cat-ezgif.com-rotate.gif}" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
+            </span>
+        </div>
     </div>
-  </section>
-
-  <!-- Hero Image -->
-  <div class="hero-img">
-    <img src="\css\image.png" alt="Premium Cashew Nuts" />
-  </div>
-
-  <!-- About Us Section -->
-  <section id="about" class="about-section">
-    <div class="about-container">
-      <div class="about-content">
-        <h2>Về Chúng Tôi</h2>
-        <p>
-          <strong>BÁN.NHÀ</strong> là công ty bất động sản hàng đầu với hơn <span class="highlight">21</span> năm kinh nghiệm trong lĩnh vực 
-          mua bán, cho thuê và đầu tư bất động sản. Chúng tôi cam kết mang đến cho khách hàng những căn nhà 
-          chất lượng cao với giá cả hợp lý nhất.
-        </p>
-        <p>
-          Với đội ngũ chuyên viên tư vấn được tuyển từ <span class="highlight">The Liems</span> và quy trình làm việc chuyên nghiệp, 
-          chúng tôi đảm bảo <span class="highlight">giao nhà trong ngày</span>
-        </p>
-        
-        <div class="about-stats">
-          <div class="stat-item">
-            <span class="stat-number">10.000+</span>
-            <span class="stat-label">Căn nhà đã bán</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">9999+</span>
-            <span class="stat-label">Khách hàng hài lòng</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">Rảnh Thì Rep <3</span>
-            <span class="stat-label">Hỗ trợ khách hàng</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">100% Uy tín</span>
-            <span class="stat-label">trust me bro...</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="about-features">
-        <ul class="feature-list">
-          <li class="feature-item">
-            <div class="feature-icon">
-              <i class="bi bi-house-check"></i>
-            </div>
-            <div class="feature-text">
-              <div class="feature-title">Chất lượng đảm bảo</div>
-              <div class="feature-desc">Tất cả căn nhà đều có vong</div>
-            </div>
-          </li>
-          <li class="feature-item">
-            <div class="feature-icon">
-              <i class="bi bi-lightning"></i>
-            </div>
-            <div class="feature-text">
-              <div class="feature-title">Giao nhà nhanh chóng</div>
-              <div class="feature-desc">Sáng cọc tiền, chiều có nhà ok?</div>
-            </div>
-          </li>
-          <li class="feature-item">
-            <div class="feature-icon">
-              <i class="bi bi-shield-check"></i>
-            </div>
-            <div class="feature-text">
-              <div class="feature-title">Uy tín hàng đầu</div>
-              <div class="feature-desc">Liêm</div>
-            </div>
-          </li>
-          <li class="feature-item">
-            <div class="feature-icon">
-              <i class="bi bi-gift"></i>
-            </div>
-            <div class="feature-text">
-              <div class="feature-title">Ưu đãi hấp dẫn</div>
-              <div class="feature-desc">Mua 5 nhà tặng 1 bàn ủi, nhiều chương trình khuyến mãi khác!!!</div>
-            </div>
-          </li>
-          <li class="feature-item">
-            <div class="feature-icon">
-              <i class="bi bi-headset"></i>
-            </div>
-            <div class="feature-text">
-              <div class="feature-title">Hỗ trợ khách hàng</div>
-              <div class="feature-desc">Không có tiền thuê...</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Scrolling Banner -->
-  <div class="scrolling-text">
-    <span>
-      <img src="image/cat-ezgif.com-rotate.gif" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
-      Bán nhà —  Mua 5 nhà tặng 1 bàn ủi — Liên hệ ngay! — Donate here: MoMo (0932645xxx) Pham Minh Trung <3
-      <img src="image/cat-ezgif.com-rotate.gif" alt="icon" style="height: 24px; vertical-align: middle; margin-right: 10px;">
-    </span>
-  </div>
-
-  <!-- Modal Login -->
-  <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; z-index:1000;">
-    <div class="login-modal-content" style="background:white; padding:40px; border-radius:15px; min-width:400px; max-width:90%; margin:20px auto; box-shadow:0 4px 20px rgba(0,0,0,0.2); position:relative;">
-      <button type="button" class="modal-close-btn" onclick="hideLoginModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; font-size:24px; cursor:pointer; color:#666;">&times;</button>
-      
-      <div style="text-align:center; margin-bottom:30px;">
-        <h2 style="color:#333; font-size:28px; margin-bottom:10px;">Welcome Back</h2>
-        <p style="color:#666; margin-bottom:25px;">Please login to your account</p>
-      </div>
-
-      <form method="post" action="/login" style="display:flex; flex-direction:column; gap:20px;">
-        <div class="form-group" style="position:relative;">
-          <i class="bi bi-person" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
-          <input type="text" name="username" placeholder="Username" class="form-control" required 
-                 style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
-        </div>
-
-        <div class="form-group" style="position:relative;">
-          <i class="bi bi-lock" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#666;"></i>
-          <input type="password" name="password" placeholder="Password" class="form-control" required 
-                 style="padding:12px 12px 12px 40px; border-radius:8px; border:2px solid #e1e1e1; width:100%; font-size:16px; transition:all 0.3s;">
-        </div>
-
-        <div style="display:flex; gap:10px; margin-top:20px;">
-          <button type="submit" class="btn btn-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase;">Login</button>
-          <a href="/register" class="btn btn-outline-primary" style="flex:1; padding:12px; border-radius:8px; font-size:16px; font-weight:500; text-transform:uppercase; text-decoration:none; text-align:center;">Register</a>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <style>
-    .login-modal-content {
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .form-control:focus {
-      border-color: #007bff !important;
-      box-shadow: 0 0 0 2px rgba(0,123,255,0.25) !important;
-      outline: none;
-    }
-
-    .modal-close-btn:hover {
-      color: #333;
-      transform: rotate(90deg);
-      transition: all 0.3s;
-    }
-  </style>
-
-  <script>
-  function showLoginModal() {
-    document.getElementById('loginModal').style.display = 'flex';
-  }
-  function hideLoginModal() {
-    document.getElementById('loginModal').style.display = 'none';
-  }
-  // Đóng modal khi nhấn ra ngoài
-  window.onclick = function(event) {
-    var modal = document.getElementById('loginModal');
-    if (event.target === modal) {
-      hideLoginModal();
-    }
-  }
-  </script>
-
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,193 +7,197 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/styles.css">
-    <style>
-        body {
-            background-color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-            flex-direction: column;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 100vh;
-            background-image: url('/css/image.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: brightness(0.8);
-            z-index: -1;
-        }
-
-        .register-container {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 600px;
-            animation: fadeIn 0.3s ease-out;
-            position: relative;
-            z-index: 1;
-            margin: auto;
-        }
-
-        .footer {
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            background: #1B2B3B;
-            box-shadow: 0 -2px 10px rgba(27, 43, 59, 0.3);
-        }
-
-        .footer p {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+    <th:block layout:fragment="css">
+        <style>
+            body {
+                background-color: #ffffff;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                position: relative;
+                overflow-x: hidden;
+                flex-direction: column;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 100vh;
+                background-image: url('/css/image.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: brightness(0.8);
+                z-index: -1;
             }
-        }
 
-        .form-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
+            .register-container {
+                background: white;
+                padding: 40px;
+                border-radius: 15px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                width: 100%;
+                max-width: 600px;
+                animation: fadeIn 0.3s ease-out;
+                position: relative;
+                z-index: 1;
+                margin: auto;
+            }
 
-        .form-control {
-            padding: 12px 12px 12px 40px;
-            border-radius: 8px;
-            border: 2px solid #e1e1e1;
-            width: 100%;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
+            .footer {
+                width: 100%;
+                padding: 20px;
+                text-align: center;
+                color: white;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+                background: #1B2B3B;
+                box-shadow: 0 -2px 10px rgba(27, 43, 59, 0.3);
+            }
 
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-            outline: none;
-        }
+            .footer p {
+                margin: 0;
+                font-size: 14px;
+                font-weight: 500;
+            }
 
-        .form-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-        }
+            .footer a {
+                color: white;
+                text-decoration: none;
+            }
 
-        .btn {
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            text-transform: uppercase;
-            border-radius: 8px;
-        }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-        .error-message {
-            color: #dc3545;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
+            .form-group {
+                position: relative;
+                margin-bottom: 20px;
+            }
 
-        .password-requirements {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-    </style>
+            .form-control {
+                padding: 12px 12px 12px 40px;
+                border-radius: 8px;
+                border: 2px solid #e1e1e1;
+                width: 100%;
+                font-size: 16px;
+                transition: all 0.3s;
+            }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+                outline: none;
+            }
+
+            .form-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #666;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 16px;
+                font-weight: 500;
+                text-transform: uppercase;
+                border-radius: 8px;
+            }
+
+            .error-message {
+                color: #dc3545;
+                font-size: 14px;
+                margin-top: 5px;
+                display: none;
+            }
+
+            .password-requirements {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+            }
+        </style>
+    </th:block>
 </head>
 <body>
-    <div class="register-container">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #333; font-size: 28px; margin-bottom: 10px;">Create Account</h2>
-            <p style="color: #666;">Please fill in your information to register</p>
+    <div layout:fragment="content">
+        <div class="register-container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color: #333; font-size: 28px; margin-bottom: 10px;">Create Account</h2>
+                <p style="color: #666;">Please fill in your information to register</p>
+            </div>
+
+            <form method="post" th:action="@{/register}" id="registerForm" onsubmit="return validateForm()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <i class="bi bi-person form-icon"></i>
+                            <input type="text" name="firstName" placeholder="First Name" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <i class="bi bi-person form-icon"></i>
+                            <input type="text" name="lastName" placeholder="Last Name" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <i class="bi bi-person-badge form-icon"></i>
+                    <input type="text" name="username" placeholder="Username" class="form-control" required>
+                    <div class="error-message" id="username-error">Username must be at least 3 characters long</div>
+                </div>
+
+                <div class="form-group">
+                    <i class="bi bi-envelope form-icon"></i>
+                    <input type="email" name="email" placeholder="Email" class="form-control" required>
+                    <div class="error-message" id="email-error">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-group">
+                    <i class="bi bi-telephone form-icon"></i>
+                    <input type="tel" name="phone" placeholder="Phone Number" class="form-control" required>
+                    <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+                </div>
+
+                <div class="form-group">
+                    <i class="bi bi-lock form-icon"></i>
+                    <input type="password" name="password" id="password" placeholder="Password" class="form-control" required>
+                    <div class="password-requirements">
+                        Password must be at least 8 characters long and contain letters and numbers
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <i class="bi bi-lock-check form-icon"></i>
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control" required>
+                    <div class="error-message" id="password-error">Passwords do not match</div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Register</button>
+                    <a th:href="@{/}" class="btn btn-outline-secondary" style="flex: 1;">Cancel</a>
+                </div>
+            </form>
         </div>
-
-        <form method="post" action="/register" id="registerForm" onsubmit="return validateForm()">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <i class="bi bi-person form-icon"></i>
-                        <input type="text" name="firstName" placeholder="First Name" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <i class="bi bi-person form-icon"></i>
-                        <input type="text" name="lastName" placeholder="Last Name" class="form-control" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <i class="bi bi-person-badge form-icon"></i>
-                <input type="text" name="username" placeholder="Username" class="form-control" required>
-                <div class="error-message" id="username-error">Username must be at least 3 characters long</div>
-            </div>
-
-            <div class="form-group">
-                <i class="bi bi-envelope form-icon"></i>
-                <input type="email" name="email" placeholder="Email" class="form-control" required>
-                <div class="error-message" id="email-error">Please enter a valid email address</div>
-            </div>
-
-            <div class="form-group">
-                <i class="bi bi-telephone form-icon"></i>
-                <input type="tel" name="phone" placeholder="Phone Number" class="form-control" required>
-                <div class="error-message" id="phone-error">Please enter a valid phone number</div>
-            </div>
-
-            <div class="form-group">
-                <i class="bi bi-lock form-icon"></i>
-                <input type="password" name="password" id="password" placeholder="Password" class="form-control" required>
-                <div class="password-requirements">
-                    Password must be at least 8 characters long and contain letters and numbers
-                </div>
-            </div>
-
-            <div class="form-group">
-                <i class="bi bi-lock-check form-icon"></i>
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control" required>
-                <div class="error-message" id="password-error">Passwords do not match</div>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 30px;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Register</button>
-                <a href="/" class="btn btn-outline-secondary" style="flex: 1;">Cancel</a>
-            </div>
-        </form>
     </div>
 
     <footer class="footer">
@@ -203,50 +207,52 @@
         </p>
     </footer>
 
-    <script>
-        function validateForm() {
-            let isValid = true;
-            const form = document.getElementById('registerForm');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirmPassword');
-            
-            // Reset error messages
-            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    <th:block layout:fragment="scripts">
+        <script>
+            function validateForm() {
+                let isValid = true;
+                const form = document.getElementById('registerForm');
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirmPassword');
+                
+                // Reset error messages
+                document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
 
-            // Username validation
-            if (form.username.value.length < 3) {
-                document.getElementById('username-error').style.display = 'block';
-                isValid = false;
+                // Username validation
+                if (form.username.value.length < 3) {
+                    document.getElementById('username-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(form.email.value)) {
+                    document.getElementById('email-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Phone validation
+                const phoneRegex = /^\d{10,}$/;
+                if (!phoneRegex.test(form.phone.value.replace(/\D/g, ''))) {
+                    document.getElementById('phone-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                // Password validation
+                if (password.value.length < 8 || !/\d/.test(password.value) || !/[a-zA-Z]/.test(password.value)) {
+                    password.classList.add('is-invalid');
+                    isValid = false;
+                }
+
+                // Confirm password validation
+                if (password.value !== confirmPassword.value) {
+                    document.getElementById('password-error').style.display = 'block';
+                    isValid = false;
+                }
+
+                return isValid;
             }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(form.email.value)) {
-                document.getElementById('email-error').style.display = 'block';
-                isValid = false;
-            }
-
-            // Phone validation
-            const phoneRegex = /^\d{10,}$/;
-            if (!phoneRegex.test(form.phone.value.replace(/\D/g, ''))) {
-                document.getElementById('phone-error').style.display = 'block';
-                isValid = false;
-            }
-
-            // Password validation
-            if (password.value.length < 8 || !/\d/.test(password.value) || !/[a-zA-Z]/.test(password.value)) {
-                password.classList.add('is-invalid');
-                isValid = false;
-            }
-
-            // Confirm password validation
-            if (password.value !== confirmPassword.value) {
-                document.getElementById('password-error').style.display = 'block';
-                isValid = false;
-            }
-
-            return isValid;
-        }
-    </script>
+        </script>
+    </th:block>
 </body>
 </html>
