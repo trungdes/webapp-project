@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import org.springframework.web.bind.WebDataBinder;
 
 @Controller
 public class AdminApartmentController {
@@ -25,6 +26,11 @@ public class AdminApartmentController {
 
     @Autowired
     private ApartmentPhotoRepository apartmentPhotoRepository;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setDisallowedFields("photos");
+    }
 
     @GetMapping("/admin/add-apartment")
     public String showAddApartmentForm(Model model) {
@@ -92,6 +98,6 @@ public class AdminApartmentController {
     @PostMapping("/admin/delete-apartment")
     public String deleteApartment(@RequestParam("apartmentNumber") String apartmentNumber) {
         apartmentService.deleteApartmentByNumber(apartmentNumber);
-        return "redirect:/admin";
+        return "redirect:/admin#apartments";
     }
 } 

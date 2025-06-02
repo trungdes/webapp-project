@@ -45,6 +45,7 @@ public class Apartment {
     private Building building;
 
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @org.springframework.data.annotation.Transient
     private List<ApartmentPhoto> photos;
 
     @Override
