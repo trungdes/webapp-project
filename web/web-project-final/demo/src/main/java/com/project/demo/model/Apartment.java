@@ -32,13 +32,13 @@ public class Apartment {
     private String apartmentNumber;    
     
     @Column(name = "Bedrooms")
-    private int bedrooms;
+    private Integer bedrooms;
     
     @Column(name = "Bathrooms")
-    private int bathrooms;
+    private Integer bathrooms;
     
     @Column(name = "Price")
-    private double price;
+    private Double price;
     
     @ManyToOne
     @JoinColumn(name = "building_id")
@@ -47,6 +47,12 @@ public class Apartment {
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @org.springframework.data.annotation.Transient
     private List<ApartmentPhoto> photos;
+
+    @Column(name = "Description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "Area")
+    private Double area;
 
     @Override
     public String toString() {

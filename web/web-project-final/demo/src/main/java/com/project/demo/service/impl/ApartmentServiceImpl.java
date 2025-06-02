@@ -44,6 +44,8 @@ public class ApartmentServiceImpl implements ApartmentService {
             .bathrooms(apartment.getBathrooms())
             .building(buildingDto)
             .price(apartment.getPrice())
+            .description(apartment.getDescription())
+            .area(apartment.getArea())
             .build();
     }
 
@@ -86,5 +88,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     public void deleteApartmentByNumber(String apartmentNumber) {
         apartmentRepository.deleteById(apartmentNumber);
     }
-        
+
+    @Override
+    public Apartment findById(String apartmentNumber) {
+        return apartmentRepository.findById(apartmentNumber).orElse(null);
+    }
 }

@@ -15,4 +15,6 @@ public class ApartmentDto {
     private int bathrooms;
     private BuildingDto building;
     private double price;
+    private String description;
+    private double area;
 }

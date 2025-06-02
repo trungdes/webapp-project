@@ -100,4 +100,42 @@ public class AdminApartmentController {
         apartmentService.deleteApartmentByNumber(apartmentNumber);
         return "redirect:/admin#apartments";
     }
+
+    @PostMapping("/admin/edit-apartment")
+    public String editApartment(
+            @ModelAttribute Apartment formApartment,
+            @RequestParam("building.buildingId") String buildingId,
+            @RequestParam(value = "building.address", required = false) String buildingAddress,
+            @RequestParam(value = "photos", required = false) MultipartFile[] photos
+    ) {
+        Apartment existing = apartmentService.findById(formApartment.getApartmentNumber());
+        if (existing == null) {
+            // handle not found
+            return "redirect:/admin?error=notfound";
+        }
+
+        // Only update fields that are not null or not empty
+        if (formApartment.getBedrooms() != null) existing.setBedrooms(formApartment.getBedrooms());
+        if (formApartment.getBathrooms() != null) existing.setBathrooms(formApartment.getBathrooms());
+        if (formApartment.getPrice() != null) existing.setPrice(formApartment.getPrice());
+        if (formApartment.getArea() != null) existing.setArea(formApartment.getArea());
+        if (formApartment.getDescription() != null && !formApartment.getDescription().isEmpty())
+            existing.setDescription(formApartment.getDescription());
+
+        // Building logic
+        Building building = buildingRepository.findById(buildingId).orElse(existing.getBuilding());
+        if (building == null) {
+            building = new Building();
+            building.setBuildingId(buildingId);
+            building.setAddress(buildingAddress != null ? buildingAddress : "Unknown");
+            buildingRepository.save(building);
+        }
+        existing.setBuilding(building);
+
+        // (Optional) handle photos
+
+        apartmentService.saveApartment(existing);
+
+        return "redirect:/admin#apartments";
+    }
 } 

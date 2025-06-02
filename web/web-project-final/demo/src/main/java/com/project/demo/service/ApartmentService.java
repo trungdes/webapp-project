@@ -20,4 +20,6 @@ public interface ApartmentService {
     ApartmentDto findApartmentByNumber(String apartmentNumber);
 
     void deleteApartmentByNumber(String apartmentNumber);
+
+    Apartment findById(String apartmentNumber);
 }
