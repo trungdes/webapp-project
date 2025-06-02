@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.project.demo.service.ApartmentService;
 import com.project.demo.dto.ApartmentDto;
 import com.project.demo.model.Apartment;
+import com.project.demo.model.ApartmentPhoto;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class ApartmentController {
@@ -61,7 +64,17 @@ public class ApartmentController {
                 .toList();
         }
         
+        Map<String, String> apartmentMainPhotoMap = new HashMap<>();
+        for (ApartmentDto apt : apartments) {
+            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
+            if (photos != null && !photos.isEmpty()) {
+                apartmentMainPhotoMap.put(apt.getApartmentNumber(), photos.get(0).getPhotoUrl());
+            } else {
+                apartmentMainPhotoMap.put(apt.getApartmentNumber(), "/css/image.png");
+            }
+        }
         model.addAttribute("apartments", apartments);
+        model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);
         return "apartments";
     }
 
@@ -96,8 +109,21 @@ public class ApartmentController {
 
     @GetMapping("/apartments/{id}")
     public String apartmentDetail(@PathVariable("id") String id, Model model) {
-        List<ApartmentDto> apartments = apartmentService.findApartmentByBuildingId(id);
-        model.addAttribute("apartments", apartments);
+        System.out.println("Received apartment id: " + id);
+        ApartmentDto apartment = apartmentService.findApartmentById(id);
+        
+        if (apartment == null) {
+            System.err.println("Apartment not found with id: " + id);
+            return "redirect:/apartments";
+        }
+        
+        System.out.println("Found apartment: " + apartment);
+        model.addAttribute("apartment", apartment);
+        
+        // Get photos for the apartment
+        List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apartment.getApartmentNumber());
+        model.addAttribute("photos", photos);
+        
         return "apartment-detail";
     }
 }

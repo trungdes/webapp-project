@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.project.demo.security.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -40,14 +41,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/image/**",
-                               "/apartments", "/apartments/**", "/our-agent", "/sell").permitAll()
+                               "/apartments", "/apartments/**", "/our-agent", "/sell", "/uploads/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("MANAGER")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/apartments", true)
+                .successHandler(new CustomAuthenticationSuccessHandler())
                 .failureUrl("/?error=true")
                 .permitAll()
             )

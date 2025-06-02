@@ -142,7 +142,9 @@
                     <div th:each="apartment : ${apartments}" class="col mb-5">
                         <div class="card h-100 apartment-card">
                             <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
-                            <img class="card-img-top" th:src="${apartment.photoUrl}" th:alt="${'Apartment ' + apartment.apartmentNumber}" />
+                            <img class="card-img-top"
+                                 th:src="${apartmentMainPhotoMap[apartment.apartmentNumber]}"
+                                 th:alt="${'Apartment ' + apartment.apartmentNumber}" />
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <h5 class="fw-bolder apartment-title" th:text="${'Apartment ' + apartment.apartmentNumber}">Apartment</h5>
@@ -161,11 +163,14 @@
                                         <i class="bi bi-geo-alt"></i>
                                         <span th:text="${apartment.building != null ? apartment.building.address : 'Address not available'}">Address</span>
                                     </div>
+                                    <!-- <div class="fw-bold text-primary mt-2" th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}">
+                                        Price
+                                    </div> -->
                                 </div>
                             </div>
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" th:href="@{/apartments/{id}(id=${apartment.building != null ? apartment.building.buildingId : apartment.apartmentNumber})}">View Details</a>
+                                    <a class="btn btn-outline-dark mt-auto" th:href="@{/apartments/{id}(id=${apartment.apartmentNumber})}">View Details</a>
                                 </div>
                             </div>
                         </div>

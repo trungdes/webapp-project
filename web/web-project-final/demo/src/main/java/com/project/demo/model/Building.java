@@ -9,11 +9,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +23,6 @@ import java.util.List;
 @Table(name = "building")
 public class Building {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BuildingID")
     private String buildingId;
 
@@ -30,4 +31,12 @@ public class Building {
 
     @OneToMany(mappedBy = "building")
     private List<Apartment> apartments;
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "buildingId='" + buildingId + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project.demo.model.Apartment;
 
-public interface ApartmentRepository extends JpaRepository<Apartment, Integer> {
+
+public interface ApartmentRepository extends JpaRepository<Apartment, String> {
     List<Apartment> findByBuildingBuildingId(String buildingId);
+    
 }

@@ -126,16 +126,16 @@
         <!-- Apartment Header -->
         <section class="apartment-header">
             <div class="container">
-                <h1 class="apartment-title">Apartment A-101</h1>
-                <p class="lead">Landmark 81, 720A Dien Bien Phu, Binh Thanh District, Ho Chi Minh City</p>
+                <h1 class="apartment-title" th:text="${'Apartment ' + apartment.apartmentNumber}">Apartment A-101</h1>
+                <p class="lead" th:text="${apartment.building != null ? apartment.building.address : 'Address not available'}">Landmark 81, 720A Dien Bien Phu, Binh Thanh District, Ho Chi Minh City</p>
                 <div class="d-flex gap-4">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-door-open me-2"></i>
-                        <span>3 Bedrooms</span>
+                        <span th:text="${apartment.bedrooms + ' Bedrooms'}">3 Bedrooms</span>
                     </div>
                     <div class="d-flex align-items-center">
                         <i class="bi bi-water me-2"></i>
-                        <span>2 Bathrooms</span>
+                        <span th:text="${apartment.bathrooms + ' Bathrooms'}">2 Bathrooms</span>
                     </div>
                     <div class="d-flex align-items-center">
                         <i class="bi bi-arrows-angle-expand me-2"></i>
@@ -156,14 +156,14 @@
                             <div class="col-md-4">
                                 <div class="feature-card text-center">
                                     <i class="bi bi-door-open feature-icon"></i>
-                                    <h3 class="feature-title">3</h3>
+                                    <h3 class="feature-title" th:text="${apartment.bedrooms}">3</h3>
                                     <p>Bedrooms</p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="feature-card text-center">
                                     <i class="bi bi-water feature-icon"></i>
-                                    <h3 class="feature-title">2</h3>
+                                    <h3 class="feature-title" th:text="${apartment.bathrooms}">2</h3>
                                     <p>Bathrooms</p>
                                 </div>
                             </div>
@@ -195,21 +195,18 @@
                     <!-- Photo Gallery -->
                     <section class="mb-5">
                         <h2 class="mb-4">Photo Gallery</h2>
-                        <img src="/css/image.png" class="gallery-img" alt="Main Photo">
-                        <div class="row g-2 mt-2">
-                            <div class="col-3">
-                                <img src="/css/image.png" class="thumbnail" alt="Living Room">
-                            </div>
-                            <div class="col-3">
-                                <img src="/css/image.png" class="thumbnail" alt="Kitchen">
-                            </div>
-                            <div class="col-3">
-                                <img src="/css/image.png" class="thumbnail" alt="Master Bedroom">
-                            </div>
-                            <div class="col-3">
-                                <img src="/css/image.png" class="thumbnail" alt="Bathroom">
+                        <div th:if="${photos != null and !photos.isEmpty()}">
+                            <img th:src="@{${photos[0].photoUrl}}" class="gallery-img" alt="Main Photo">
+                            <div class="row g-2 mt-2">
+                                <div class="col-3" th:each="photo, iterStat : ${photos}" th:if="${iterStat.index > 0}">
+                                    <img th:src="@{${photo.photoUrl}}" class="thumbnail" alt="Apartment Photo">
+                                </div>
                             </div>
                         </div>
+                        <div th:if="${photos == null or photos.isEmpty()}">
+                            <img src="/css/image.png" class="gallery-img" alt="No Photo">
+                        </div>
+                        <div>Số ảnh: <span th:text="${#lists.size(photos)}"></span></div>
                     </section>
 
                     <!-- Amenities -->

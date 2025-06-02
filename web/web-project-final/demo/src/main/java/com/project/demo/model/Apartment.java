@@ -15,21 +15,21 @@ import jakarta.persistence.FetchType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
-@Data
 @Entity
+@Table(name = "apartment")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "apartment")      
 public class Apartment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apartment_number")
-    private int apartmentNumber;    
+    private String apartmentNumber;    
     
     @Column(name = "Bedrooms")
     private int bedrooms;
@@ -37,13 +37,23 @@ public class Apartment {
     @Column(name = "Bathrooms")
     private int bathrooms;
     
+    @Column(name = "Price")
+    private double price;
+    
     @ManyToOne
     @JoinColumn(name = "building_id")
     private Building building;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
-
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ApartmentPhoto> photos;
+
+    @Override
+    public String toString() {
+        return "Apartment{" +
+                "apartmentNumber='" + apartmentNumber + '\'' +
+                ", bedrooms=" + bedrooms +
+                ", bathrooms=" + bathrooms +
+                ", price=" + price +
+                '}';
+    }
 }

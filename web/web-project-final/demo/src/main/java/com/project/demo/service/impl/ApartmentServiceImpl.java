@@ -8,15 +8,19 @@ import org.springframework.stereotype.Service;
 import com.project.demo.dto.ApartmentDto;
 import com.project.demo.dto.BuildingDto;
 import com.project.demo.model.Apartment;
+import com.project.demo.model.ApartmentPhoto;
 import com.project.demo.repository.ApartmentRepository;
+import com.project.demo.repository.ApartmentPhotoRepository;
 import com.project.demo.service.ApartmentService;
 
 @Service
 public class ApartmentServiceImpl implements ApartmentService {
     private ApartmentRepository apartmentRepository;
+    private ApartmentPhotoRepository apartmentPhotoRepository;
 
-    public ApartmentServiceImpl(ApartmentRepository apartmentRepository) {
+    public ApartmentServiceImpl(ApartmentRepository apartmentRepository, ApartmentPhotoRepository apartmentPhotoRepository) {
         this.apartmentRepository = apartmentRepository;
+        this.apartmentPhotoRepository = apartmentPhotoRepository;
     }
 
     @Override
@@ -38,8 +42,8 @@ public class ApartmentServiceImpl implements ApartmentService {
             .apartmentNumber(apartment.getApartmentNumber())
             .bedrooms(apartment.getBedrooms())
             .bathrooms(apartment.getBathrooms())
-            .photoUrl(apartment.getPhotoUrl())
             .building(buildingDto)
+            .price(apartment.getPrice())
             .build();
     }
 
@@ -55,4 +59,32 @@ public class ApartmentServiceImpl implements ApartmentService {
             .map(this::mapToDto)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ApartmentPhoto> findPhotosByApartmentNumber(String apartmentNumber) {
+        return apartmentPhotoRepository.findPhotosByApartmentNumber(apartmentNumber);
+    }
+
+    @Override
+    public ApartmentDto findApartmentById(String id) {
+        System.out.println("Finding apartment with id: " + id);
+        Apartment apartment = apartmentRepository.findById(id).orElse(null);
+        if (apartment == null) {
+            System.err.println("No apartment found with id: " + id);
+            return null;
+        }
+        System.out.println("Found apartment: " + apartment);
+        return mapToDto(apartment);
+    }
+
+    @Override
+    public ApartmentDto findApartmentByNumber(String apartmentNumber) {
+        return findApartmentById(apartmentNumber);
+    }
+
+    @Override
+    public void deleteApartmentByNumber(String apartmentNumber) {
+        apartmentRepository.deleteById(apartmentNumber);
+    }
+        
 }
