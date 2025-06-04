@@ -22,4 +22,7 @@ public class ApartmentPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_number")
     private Apartment apartment;
+
+    @Column(name = "is_cover")
+    private Boolean isCover;
 } 

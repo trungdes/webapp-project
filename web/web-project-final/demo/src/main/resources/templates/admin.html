@@ -115,27 +115,27 @@
         </a>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                <a class="nav-link active" href="#dashboard" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-speedometer2 me-2"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#apartments" data-bs-toggle="tab">
+                <a class="nav-link" href="#apartments" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-building me-2"></i> Apartments
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#leases" data-bs-toggle="tab">
+                <a class="nav-link" href="#leases" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-file-text me-2"></i> Lease Contracts
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#viewings" data-bs-toggle="tab">
+                <a class="nav-link" href="#viewings" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-calendar-check me-2"></i> Viewing Schedule
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#notifications" data-bs-toggle="tab">
+                <a class="nav-link" href="#notifications" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-bell me-2"></i> Notifications
                     <span class="notification-badge">3</span>
                 </a>
@@ -147,7 +147,7 @@
     <div class="main-content">
         <div class="tab-content">
             <!-- Dashboard Tab -->
-            <div class="tab-pane fade show active" id="dashboard">
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
                 <h2 class="mb-4">Dashboard Overview</h2>
                 <div class="row">
                     <div class="col-md-3 mb-4">
@@ -190,7 +190,7 @@
             </div>
 
             <!-- Apartments Tab -->
-            <div class="tab-pane fade" id="apartments">
+            <div class="tab-pane fade" id="apartments" role="tabpanel">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Apartment Management</h2>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addApartmentModal">
@@ -250,7 +250,7 @@
             </div>
 
             <!-- Lease Contracts Tab -->
-            <div class="tab-pane fade" id="leases">
+            <div class="tab-pane fade" id="leases" role="tabpanel">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Lease Contracts</h2>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newLeaseModal">
@@ -294,7 +294,7 @@
             </div>
 
             <!-- Viewing Schedule Tab -->
-            <div class="tab-pane fade" id="viewings">
+            <div class="tab-pane fade" id="viewings" role="tabpanel">
                 <h2 class="mb-4">Viewing Schedule</h2>
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -336,7 +336,7 @@
             </div>
 
             <!-- Notifications Tab -->
-            <div class="tab-pane fade" id="notifications">
+            <div class="tab-pane fade" id="notifications" role="tabpanel">
                 <h2 class="mb-4">Notifications</h2>
                 <div class="list-group">
                     <div th:if="${#lists.isEmpty(notifications)}" class="text-center text-muted py-4">
@@ -426,6 +426,18 @@
                         <div class="mb-3">
                             <label class="form-label">Images</label>
                             <input type="file" class="form-control" id="editPhotos" name="photos" multiple>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Chọn ảnh bìa</label>
+                            <div class="d-flex flex-wrap gap-2" th:if="${apartment != null and apartment.photos != null}">
+                                <div th:each="photo : ${apartment.photos}" class="text-center">
+                                    <img th:src="@{${photo.photoUrl}}" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc; border-radius: 8px;">
+                                    <div>
+                                        <input type="radio" name="coverPhotoId" th:value="${photo.id}" th:checked="${photo.isCover}">
+                                        <span>Ảnh bìa</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -566,9 +578,10 @@
     </div>
 
     <!-- Bootstrap JS and other scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+    console.log("Test script loaded!");
+    console.log("typeof bootstrap:", typeof bootstrap);
     function setupNotificationTab() {
         var notificationsTab = document.querySelector('a[href="#notifications"]');
         if (notificationsTab && !notificationsTab.dataset.listenerAdded) {
@@ -584,30 +597,7 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.btn-edit-apartment').forEach(function(button) {
-            button.addEventListener('click', function() {
-                document.getElementById('editApartmentNumber').value = this.getAttribute('data-apartment-number') || '';
-                document.getElementById('editApartmentNumber').placeholder = this.getAttribute('data-apartment-number') || '';
-                document.getElementById('editBuildingId').value = this.getAttribute('data-building-id') || '';
-                document.getElementById('editBuildingId').placeholder = this.getAttribute('data-building-id') || '';
-                document.getElementById('editBuildingAddress').value = this.getAttribute('data-building-address') || '';
-                document.getElementById('editBuildingAddress').placeholder = this.getAttribute('data-building-address') || '';
-                document.getElementById('editPrice').value = this.getAttribute('data-price') || '';
-                document.getElementById('editPrice').placeholder = this.getAttribute('data-price') || '';
-                document.getElementById('editBedrooms').value = this.getAttribute('data-bedrooms') || '';
-                document.getElementById('editBedrooms').placeholder = this.getAttribute('data-bedrooms') || '';
-                document.getElementById('editBathrooms').value = this.getAttribute('data-bathrooms') || '';
-                document.getElementById('editBathrooms').placeholder = this.getAttribute('data-bathrooms') || '';
-                document.getElementById('editArea').value = this.getAttribute('data-area') || '';
-                document.getElementById('editArea').placeholder = this.getAttribute('data-area') || '';
-                document.getElementById('editDescription').value = this.getAttribute('data-description') || '';
-                document.getElementById('editDescription').placeholder = this.getAttribute('data-description') || '';
-                document.getElementById('editType').value = this.getAttribute('data-type') || '';
-            });
-        });
-
-        // Kích hoạt tab theo hash trên URL (nếu có)
+    function activateTabFromHash() {
         if (window.location.hash) {
             var hash = window.location.hash;
             var tabTrigger = document.querySelector('a[href="' + hash + '"]');
@@ -616,8 +606,64 @@
                 tab.show();
             }
         }
+    }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.btn-edit-apartment').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var el;
+                el = document.getElementById('editApartmentNumber');
+                if (el) {
+                    el.value = this.getAttribute('data-apartment-number') || '';
+                    el.placeholder = this.getAttribute('data-apartment-number') || '';
+                }
+                el = document.getElementById('editBuildingId');
+                if (el) {
+                    el.value = this.getAttribute('data-building-id') || '';
+                    el.placeholder = this.getAttribute('data-building-id') || '';
+                }
+                el = document.getElementById('editBuildingAddress');
+                if (el) {
+                    el.value = this.getAttribute('data-building-address') || '';
+                    el.placeholder = this.getAttribute('data-building-address') || '';
+                }
+                el = document.getElementById('editPrice');
+                if (el) {
+                    el.value = this.getAttribute('data-price') || '';
+                    el.placeholder = this.getAttribute('data-price') || '';
+                }
+                el = document.getElementById('editBedrooms');
+                if (el) {
+                    el.value = this.getAttribute('data-bedrooms') || '';
+                    el.placeholder = this.getAttribute('data-bedrooms') || '';
+                }
+                el = document.getElementById('editBathrooms');
+                if (el) {
+                    el.value = this.getAttribute('data-bathrooms') || '';
+                    el.placeholder = this.getAttribute('data-bathrooms') || '';
+                }
+                el = document.getElementById('editArea');
+                if (el) {
+                    el.value = this.getAttribute('data-area') || '';
+                    el.placeholder = this.getAttribute('data-area') || '';
+                }
+                el = document.getElementById('editDescription');
+                if (el) {
+                    el.value = this.getAttribute('data-description') || '';
+                    el.placeholder = this.getAttribute('data-description') || '';
+                }
+                el = document.getElementById('editType');
+                if (el) {
+                    el.value = this.getAttribute('data-type') || '';
+                }
+            });
+        });
+
+        activateTabFromHash();
         setupNotificationTab();
+    });
+    window.addEventListener('load', function() {
+        activateTabFromHash();
     });
     </script>
 </body>
