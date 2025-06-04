@@ -110,6 +110,9 @@
             <h3>BÁN.NHÀ</h3>
             <p>Admin Panel</p>
         </div>
+        <a th:href="@{/}" class="btn btn-outline-light w-100 mb-3">
+            <i class="bi bi-arrow-left me-2"></i>Back to Home
+        </a>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
@@ -151,8 +154,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Total Apartments</h5>
-                                <h2 class="card-text">42</h2>
-                                <p class="text-muted">8 available</p>
+                                <h2 class="card-text" th:text="${totalApartments}">0</h2>
+                                <p class="text-muted" th:text="${availableApartments + ' available'}">0 available</p>
                             </div>
                         </div>
                     </div>
@@ -160,8 +163,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Active Leases</h5>
-                                <h2 class="card-text">28</h2>
-                                <p class="text-muted">3 pending renewal</p>
+                                <h2 class="card-text" th:text="${totalViewings}">0</h2>
+                                <p class="text-muted">Viewings scheduled</p>
                             </div>
                         </div>
                     </div>
@@ -169,8 +172,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Scheduled Viewings</h5>
-                                <h2 class="card-text">12</h2>
-                                <p class="text-muted">Today: 3</p>
+                                <h2 class="card-text" th:text="${totalViewings}">0</h2>
+                                <p class="text-muted">Today: <!-- Có thể thêm filter cho hôm nay nếu muốn --></p>
                             </div>
                         </div>
                     </div>
@@ -178,8 +181,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">New Notifications</h5>
-                                <h2 class="card-text">3</h2>
-                                <p class="text-muted">2 urgent</p>
+                                <h2 class="card-text" th:text="${newNotifications}">0</h2>
+                                <p class="text-muted">Unread</p>
                             </div>
                         </div>
                     </div>
@@ -204,6 +207,7 @@
                                 <th>Bedrooms</th>
                                 <th>Bathrooms</th>
                                 <th>Price</th>
+                                <th>Type</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -215,6 +219,7 @@
                                 <td th:text="${apartment.bedrooms}">3</td>
                                 <td th:text="${apartment.bathrooms}">2</td>
                                 <td th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}">$1,200,000</td>
+                                <td th:text="${apartment.type == 'RENT' ? 'For Lease' : 'For Sale'}">For Sale</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary btn-edit-apartment"
                                         data-bs-toggle="modal"
@@ -226,7 +231,8 @@
                                                  data-bedrooms=${apartment.bedrooms},
                                                  data-bathrooms=${apartment.bathrooms},
                                                  data-area=${apartment.area},
-                                                 data-description=${apartment.description}">
+                                                 data-description=${apartment.description},
+                                                 data-type=${apartment.type}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <form th:action="@{/admin/delete-apartment}" method="post" style="display:inline;"
@@ -290,32 +296,42 @@
             <!-- Viewing Schedule Tab -->
             <div class="tab-pane fade" id="viewings">
                 <h2 class="mb-4">Viewing Schedule</h2>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Today's Viewings</h5>
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item list-group-item-action">
-                                        <div class="d-flex justify-content-between">
-                                            <h6 class="mb-1">A101 - Landmark 81</h6>
-                                            <small>10:00 AM</small>
-                                        </div>
-                                        <p class="mb-1">John Doe</p>
-                                        <small>Contact: +1234567890</small>
-                                    </a>
-                                    <!-- More viewing items -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Apartment</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="schedule, iterStat : ${viewingSchedules}">
+                                <td th:text="${iterStat.count}"></td>
+                                <td th:text="${schedule.apartment != null ? schedule.apartment.apartmentNumber : 'N/A'}"></td>
+                                <td th:text="${schedule.name}"></td>
+                                <td th:text="${schedule.email}"></td>
+                                <td th:text="${schedule.phone}"></td>
+                                <td th:text="${schedule.date}"></td>
+                                <td th:text="${schedule.time}"></td>
+                                <td th:text="${schedule.notes}"></td>
+                                <td>
+                                    <form th:action="@{/admin/delete-viewing-schedule}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this viewing schedule?');">
+                                        <input type="hidden" name="id" th:value="${schedule.id}" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -323,15 +339,28 @@
             <div class="tab-pane fade" id="notifications">
                 <h2 class="mb-4">Notifications</h2>
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex justify-content-between">
-                            <h6 class="mb-1">New Viewing Request</h6>
-                            <small class="text-muted">3 minutes ago</small>
-                        </div>
-                        <p class="mb-1">New viewing request for Apartment A101</p>
-                        <small class="text-muted">From: Jane Smith</small>
-                    </a>
-                    <!-- More notification items -->
+                    <div th:if="${#lists.isEmpty(notifications)}" class="text-center text-muted py-4">
+                        <i class="bi bi-bell-slash" style="font-size: 2rem;"></i>
+                        <div>No notifications yet.</div>
+                    </div>
+                    <form th:each="noti : ${notifications}" th:action="@{/admin/mark-notification-read}" method="post" style="display:inline; width:100%;">
+                        <input type="hidden" name="id" th:value="${noti.id}" />
+                        <button type="submit"
+                                th:classappend="${noti.isRead} ? 'list-group-item list-group-item-action d-flex align-items-start gap-3 py-3' : 'list-group-item list-group-item-action d-flex align-items-start gap-3 py-3 active bg-light border-primary'"
+                                style="border:none; background:none; width:100%; text-align:left; padding:0; color: #212529;">
+                            <div>
+                                <i class="bi bi-bell-fill"
+                                   th:classappend="${noti.isRead} ? 'text-secondary' : 'text-primary'"
+                                   style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold" th:text="${noti.message}" style="color: #212529;">New Viewing Request</div>
+                                <div class="small" th:text="${noti.apartment != null ? 'Apartment: ' + noti.apartment.apartmentNumber : ''}" style="color: #495057;"></div>
+                                <div class="small" th:text="${noti.createdAt}" style="color: #495057;"></div>
+                            </div>
+                            <div th:if="${!noti.isRead}" class="badge bg-primary align-self-center">New</div>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -379,6 +408,15 @@
                             <div class="col-md-4">
                                 <label class="form-label">Area (m²)</label>
                                 <input type="number" class="form-control" id="editArea" name="area" min="0" step="0.1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Type</label>
+                                <select class="form-select" id="editType" name="type">
+                                    <option value="SALE">For Sale</option>
+                                    <option value="RENT">For Lease</option>
+                                </select>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -469,7 +507,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Apartment Number</label>
-                                <input type="number" class="form-control" name="apartmentNumber" required>
+                                <input type="text" class="form-control" name="apartmentNumber" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Bedrooms</label>
@@ -501,6 +539,13 @@
                                 <label class="form-label">Area (m²)</label>
                                 <input type="number" class="form-control" name="area" min="0" step="0.1" required>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Type</label>
+                                <select class="form-select" name="type" required>
+                                    <option value="SALE">For Sale</option>
+                                    <option value="RENT">For Lease</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Description</label>
@@ -524,6 +569,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script>
+    function setupNotificationTab() {
+        var notificationsTab = document.querySelector('a[href="#notifications"]');
+        if (notificationsTab && !notificationsTab.dataset.listenerAdded) {
+            notificationsTab.addEventListener('click', function() {
+                fetch('/admin/mark-all-notifications-read', {method: 'POST'})
+                    .then(() => {
+                        // Ẩn badge ngay lập tức
+                        var badge = document.querySelector('.notification-badge');
+                        if (badge) badge.style.display = 'none';
+                    });
+            });
+            notificationsTab.dataset.listenerAdded = 'true';
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.btn-edit-apartment').forEach(function(button) {
             button.addEventListener('click', function() {
@@ -543,8 +603,21 @@
                 document.getElementById('editArea').placeholder = this.getAttribute('data-area') || '';
                 document.getElementById('editDescription').value = this.getAttribute('data-description') || '';
                 document.getElementById('editDescription').placeholder = this.getAttribute('data-description') || '';
+                document.getElementById('editType').value = this.getAttribute('data-type') || '';
             });
         });
+
+        // Kích hoạt tab theo hash trên URL (nếu có)
+        if (window.location.hash) {
+            var hash = window.location.hash;
+            var tabTrigger = document.querySelector('a[href="' + hash + '"]');
+            if (tabTrigger) {
+                var tab = new bootstrap.Tab(tabTrigger);
+                tab.show();
+            }
+        }
+
+        setupNotificationTab();
     });
     </script>
 </body>

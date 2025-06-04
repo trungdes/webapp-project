@@ -17,4 +17,5 @@ public class ApartmentDto {
     private double price;
     private String description;
     private double area;
+    private String type;
 }

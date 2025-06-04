@@ -46,6 +46,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             .price(apartment.getPrice())
             .description(apartment.getDescription())
             .area(apartment.getArea())
+            .type(apartment.getType())
             .build();
     }
 
@@ -86,6 +87,25 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public void deleteApartmentByNumber(String apartmentNumber) {
+        // Xóa file ảnh vật lý
+        List<ApartmentPhoto> photos = apartmentPhotoRepository.findPhotosByApartmentNumber(apartmentNumber);
+        if (photos != null) {
+            for (ApartmentPhoto photo : photos) {
+                String photoUrl = photo.getPhotoUrl();
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    // Loại bỏ dấu / ở đầu nếu có
+                    String fileName = photoUrl.startsWith("/uploads/") ? photoUrl.substring("/uploads/".length()) : photoUrl;
+                    String uploadDir = System.getProperty("user.dir") + java.io.File.separator + "uploads" + java.io.File.separator;
+                    java.io.File file = new java.io.File(uploadDir + fileName);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+            }
+        }
+        // Xóa bản ghi ảnh trong DB (nếu chưa cascade)
+        apartmentPhotoRepository.deleteAll(photos);
+        // Xóa căn hộ
         apartmentRepository.deleteById(apartmentNumber);
     }
 

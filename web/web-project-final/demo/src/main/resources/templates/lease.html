@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
-    <title>Apartments List</title>
+    <title>Apartments for Lease - BÁN.NHÀ</title>
     <th:block layout:fragment="css">
         <style>
             .filter-section {
@@ -63,8 +63,8 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Find Your <span class="highlight">Dream Home</span></h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Discover our exclusive collection of apartments</p>
+                    <h1 class="display-4 fw-bolder">Find Your <span class="highlight">Rental Home</span></h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Discover our exclusive collection of rental apartments</p>
                 </div>
             </div>
         </header>
@@ -72,8 +72,8 @@
         <!-- Filter Section -->
         <section class="filter-section">
             <div class="container px-4 px-lg-5">
-                <form class="filter-form" th:action="@{/apartments}" method="get">
-                    <h3 class="filter-title">Filter Apartments</h3>
+                <form class="filter-form" th:action="@{/lease}" method="get">
+                    <h3 class="filter-title">Filter Rental Apartments</h3>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="filter-group">
@@ -100,14 +100,14 @@
                         </div>
                         <div class="col-md-3">
                             <div class="filter-group">
-                                <label class="filter-label">Price Range</label>
+                                <label class="filter-label">Monthly Rent</label>
                                 <select class="form-select" name="priceRange">
                                     <option value="">Any</option>
-                                    <option value="0-1000000000">Under 1B VND</option>
-                                    <option value="1000000000-2000000000">1B - 2B VND</option>
-                                    <option value="2000000000-5000000000">2B - 5B VND</option>
-                                    <option value="5000000000-10000000000">5B - 10B VND</option>
-                                    <option value="10000000000-999999999999">10B+ VND</option>
+                                    <option value="0-10000000">Under 10M VND</option>
+                                    <option value="10000000-20000000">10M - 20M VND</option>
+                                    <option value="20000000-50000000">20M - 50M VND</option>
+                                    <option value="50000000-100000000">50M - 100M VND</option>
+                                    <option value="100000000-999999999">100M+ VND</option>
                                 </select>
                             </div>
                         </div>
@@ -141,14 +141,14 @@
                     <!-- Dynamic Apartment Cards -->
                     <div th:each="apartment : ${apartments}" class="col mb-5">
                         <div class="card h-100 apartment-card">
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">Sale</div>
+                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index: 10;">For Lease</div>
                             <img class="card-img-top"
                                  th:src="${apartmentMainPhotoMap[apartment.apartmentNumber]}"
                                  th:alt="${'Apartment ' + apartment.apartmentNumber}" />
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <h5 class="fw-bolder apartment-title" th:text="${'Apartment ' + apartment.apartmentNumber}">Apartment</h5>
-                                    <div class="fw-bold text-primary mb-2" th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}">
+                                    <div class="fw-bold text-primary mb-2" th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND/month'}">
                                         Price
                                     </div>
                                     <div class="text-muted mb-2">
@@ -173,4 +173,4 @@
         </section>
     </div>
 </body>
-</html>
+</html> 

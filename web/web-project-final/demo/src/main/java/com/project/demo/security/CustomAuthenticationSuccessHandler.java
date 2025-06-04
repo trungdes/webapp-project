@@ -12,12 +12,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        for (GrantedAuthority auth : authentication.getAuthorities()) {
-            if ("ROLE_MANAGER".equals(auth.getAuthority()) || "ROLE_ADMIN".equals(auth.getAuthority())) {
-                response.sendRedirect("/admin");
-                return;
-            }
-        }
-        response.sendRedirect("/apartments");
+        response.sendRedirect("/");
     }
 } 

@@ -109,6 +109,21 @@
                 0% { transform: translateX(100%); }
                 100% { transform: translateX(-100%); }
             }
+            .hero-img-bg {
+                width: 100vw;
+                aspect-ratio: 16 / 7;
+                background-image: url('/css/image.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                margin-bottom: 2rem;
+                border-radius: 0;
+                position: relative;
+                left: 50%;
+                right: 50%;
+                margin-left: -50vw;
+                margin-right: -50vw;
+            }
         </style>
     </th:block>
 </head>
@@ -131,10 +146,8 @@
             </div>
         </section>
 
-        <!-- Hero Image -->
-        <div class="hero-img">
-            <img th:src="@{/css/image.png}" alt="Premium Housing" />
-        </div>
+        <!-- Hero Image (full width) -->
+        <div class="hero-img-bg"></div>
 
         <!-- About Us Section -->
         <section id="about" class="about-section">

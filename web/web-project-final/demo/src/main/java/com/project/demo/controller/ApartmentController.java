@@ -35,8 +35,9 @@ public class ApartmentController {
             @RequestParam(required = false) String location,
             Model model) {
         
-        List<ApartmentDto> apartments = apartmentService.findAllApartments();
-        
+        List<ApartmentDto> apartments = apartmentService.findAllApartments().stream()
+            .filter(apt -> "SALE".equals(apt.getType()))
+            .toList();
         
         if (bedrooms != null && !bedrooms.isEmpty()) {
             apartments = apartments.stream()
@@ -55,6 +56,9 @@ public class ApartmentController {
             double minPrice = Double.parseDouble(range[0]);
             double maxPrice = Double.parseDouble(range[1]);
             
+            apartments = apartments.stream()
+                .filter(apt -> apt.getPrice() >= minPrice && apt.getPrice() <= maxPrice)
+                .toList();
         }
         
         if (location != null && !location.isEmpty()) {
@@ -125,5 +129,60 @@ public class ApartmentController {
         model.addAttribute("photos", photos);
         
         return "apartment-detail";
+    }
+
+    @GetMapping("/lease")
+    public String showLeasePage(
+            @RequestParam(required = false) String bedrooms,
+            @RequestParam(required = false) String bathrooms,
+            @RequestParam(required = false) String priceRange,
+            @RequestParam(required = false) String location,
+            Model model) {
+        
+        List<ApartmentDto> apartments = apartmentService.findAllApartments().stream()
+            .filter(apt -> "RENT".equals(apt.getType()))
+            .toList();
+        
+        if (bedrooms != null && !bedrooms.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBedrooms() == Integer.parseInt(bedrooms))
+                .toList();
+        }
+        
+        if (bathrooms != null && !bathrooms.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBathrooms() == Integer.parseInt(bathrooms))
+                .toList();
+        }
+        
+        if (priceRange != null && !priceRange.isEmpty()) {
+            String[] range = priceRange.split("-");
+            double minPrice = Double.parseDouble(range[0]);
+            double maxPrice = Double.parseDouble(range[1]);
+            
+            apartments = apartments.stream()
+                .filter(apt -> apt.getPrice() >= minPrice && apt.getPrice() <= maxPrice)
+                .toList();
+        }
+        
+        if (location != null && !location.isEmpty()) {
+            apartments = apartments.stream()
+                .filter(apt -> apt.getBuilding() != null && 
+                       apt.getBuilding().getAddress().toLowerCase().contains(location.toLowerCase()))
+                .toList();
+        }
+        
+        Map<String, String> apartmentMainPhotoMap = new HashMap<>();
+        for (ApartmentDto apt : apartments) {
+            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
+            if (photos != null && !photos.isEmpty()) {
+                apartmentMainPhotoMap.put(apt.getApartmentNumber(), photos.get(0).getPhotoUrl());
+            } else {
+                apartmentMainPhotoMap.put(apt.getApartmentNumber(), "/css/image.png");
+            }
+        }
+        model.addAttribute("apartments", apartments);
+        model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);
+        return "lease";
     }
 }

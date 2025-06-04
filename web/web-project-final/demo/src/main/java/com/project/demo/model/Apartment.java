@@ -54,6 +54,9 @@ public class Apartment {
     @Column(name = "Area")
     private Double area;
 
+    @Column(name = "Type")
+    private String type; // "RENT" or "SALE"
+
     @Override
     public String toString() {
         return "Apartment{" +

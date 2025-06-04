@@ -14,6 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import org.springframework.web.bind.WebDataBinder;
+import com.project.demo.repository.ViewingScheduleRepository;
+import com.project.demo.repository.NotificationRepository;
+import java.util.List;
+import com.project.demo.dto.ApartmentDto;
+import com.project.demo.model.ViewingSchedule;
+import com.project.demo.model.Notification;
 
 @Controller
 public class AdminApartmentController {
@@ -26,6 +32,12 @@ public class AdminApartmentController {
 
     @Autowired
     private ApartmentPhotoRepository apartmentPhotoRepository;
+
+    @Autowired
+    private ViewingScheduleRepository viewingScheduleRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -43,6 +55,7 @@ public class AdminApartmentController {
             @ModelAttribute("apartment") Apartment apartment,
             @RequestParam("building.buildingId") String buildingId,
             @RequestParam(value = "building.address", required = false) String buildingAddress,
+            @RequestParam(value = "type", required = false) String type,
             @RequestParam("photos") MultipartFile[] photos // nhận nhiều file
     ) {
         Building building = buildingRepository.findById(buildingId).orElse(null);
@@ -53,10 +66,18 @@ public class AdminApartmentController {
             buildingRepository.save(building);
         }
         apartment.setBuilding(building);
+        
+        // Set default type if not provided
+        if (type == null || type.isEmpty()) {
+            type = "SALE";
+        }
+        apartment.setType(type);
+        
         System.out.println("Apartment: " + apartment);
         System.out.println("Apartment.getBuilding(): " + apartment.getBuilding());
         System.out.println("BuildingId: " + buildingId);
         System.out.println("BuildingAddress: " + buildingAddress);
+        System.out.println("Type: " + type);
         apartmentService.saveApartment(apartment);
 
         // Lưu ảnh
@@ -92,7 +113,26 @@ public class AdminApartmentController {
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("apartments", apartmentService.findAllApartments());
+        List<ApartmentDto> apartments = apartmentService.findAllApartments();
+        List<ViewingSchedule> viewingSchedules = viewingScheduleRepository.findAll();
+        List<Notification> notifications = notificationRepository.findAll();
+
+        // Số căn hộ
+        int totalApartments = apartments.size();
+        // Số căn hộ còn trống (ví dụ: căn hộ bán)
+        int availableApartments = (int) apartments.stream().filter(a -> a.getType() != null && a.getType().equals("SALE")).count();
+        // Số lịch hẹn
+        int totalViewings = viewingSchedules.size();
+        // Số notification chưa đọc
+        int newNotifications = (int) notifications.stream().filter(n -> !n.isRead()).count();
+
+        model.addAttribute("apartments", apartments);
+        model.addAttribute("viewingSchedules", viewingSchedules);
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("totalApartments", totalApartments);
+        model.addAttribute("availableApartments", availableApartments);
+        model.addAttribute("totalViewings", totalViewings);
+        model.addAttribute("newNotifications", newNotifications);
         return "admin";
     }
     @PostMapping("/admin/delete-apartment")
@@ -106,6 +146,7 @@ public class AdminApartmentController {
             @ModelAttribute Apartment formApartment,
             @RequestParam("building.buildingId") String buildingId,
             @RequestParam(value = "building.address", required = false) String buildingAddress,
+            @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "photos", required = false) MultipartFile[] photos
     ) {
         Apartment existing = apartmentService.findById(formApartment.getApartmentNumber());
@@ -121,6 +162,7 @@ public class AdminApartmentController {
         if (formApartment.getArea() != null) existing.setArea(formApartment.getArea());
         if (formApartment.getDescription() != null && !formApartment.getDescription().isEmpty())
             existing.setDescription(formApartment.getDescription());
+        if (type != null && !type.isEmpty()) existing.setType(type);
 
         // Building logic
         Building building = buildingRepository.findById(buildingId).orElse(existing.getBuilding());
@@ -137,5 +179,33 @@ public class AdminApartmentController {
         apartmentService.saveApartment(existing);
 
         return "redirect:/admin#apartments";
+    }
+
+    @PostMapping("/admin/delete-viewing-schedule")
+    public String deleteViewingSchedule(@RequestParam("id") Long id) {
+        viewingScheduleRepository.deleteById(id);
+        return "redirect:/admin#viewings";
+    }
+
+    @PostMapping("/admin/mark-notification-read")
+    public String markNotificationRead(@RequestParam("id") Long id) {
+        Notification noti = notificationRepository.findById(id).orElse(null);
+        if (noti != null) {
+            noti.setRead(true);
+            notificationRepository.save(noti);
+        }
+        return "redirect:/admin#notifications";
+    }
+
+    @PostMapping("/admin/mark-all-notifications-read")
+    public String markAllNotificationsRead() {
+        List<Notification> notifications = notificationRepository.findAll();
+        for (Notification noti : notifications) {
+            if (!noti.isRead()) {
+                noti.setRead(true);
+                notificationRepository.save(noti);
+            }
+        }
+        return "redirect:/admin#notifications";
     }
 } 
