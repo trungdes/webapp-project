@@ -71,11 +71,18 @@ public class ApartmentController {
         Map<String, String> apartmentMainPhotoMap = new HashMap<>();
         for (ApartmentDto apt : apartments) {
             List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
-            if (photos != null && !photos.isEmpty()) {
-                apartmentMainPhotoMap.put(apt.getApartmentNumber(), photos.get(0).getPhotoUrl());
-            } else {
-                apartmentMainPhotoMap.put(apt.getApartmentNumber(), "/css/image.png");
+            String mainPhotoUrl = "/css/image.png";
+            for (ApartmentPhoto p : photos) {
+                if (Boolean.TRUE.equals(p.getIsCover())) {
+                    mainPhotoUrl = p.getPhotoUrl();
+                    break;
+                }
             }
+            // Nếu không có ảnh bìa, lấy ảnh đầu tiên nếu có
+            if (mainPhotoUrl.equals("/css/image.png") && photos != null && !photos.isEmpty()) {
+                mainPhotoUrl = photos.get(0).getPhotoUrl();
+            }
+            apartmentMainPhotoMap.put(apt.getApartmentNumber(), mainPhotoUrl);
         }
         model.addAttribute("apartments", apartments);
         model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);
@@ -115,19 +122,25 @@ public class ApartmentController {
     public String apartmentDetail(@PathVariable("id") String id, Model model) {
         System.out.println("Received apartment id: " + id);
         ApartmentDto apartment = apartmentService.findApartmentById(id);
-        
         if (apartment == null) {
             System.err.println("Apartment not found with id: " + id);
             return "redirect:/apartments";
         }
-        
         System.out.println("Found apartment: " + apartment);
         model.addAttribute("apartment", apartment);
-        
         // Get photos for the apartment
         List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apartment.getApartmentNumber());
-        model.addAttribute("photos", photos);
-        
+        ApartmentPhoto coverPhoto = null;
+        List<ApartmentPhoto> otherPhotos = new java.util.ArrayList<>();
+        for (ApartmentPhoto p : photos) {
+            if (Boolean.TRUE.equals(p.getIsCover())) {
+                coverPhoto = p;
+            } else {
+                otherPhotos.add(p);
+            }
+        }
+        model.addAttribute("coverPhoto", coverPhoto);
+        model.addAttribute("photos", otherPhotos);
         return "apartment-detail";
     }
 
@@ -175,11 +188,18 @@ public class ApartmentController {
         Map<String, String> apartmentMainPhotoMap = new HashMap<>();
         for (ApartmentDto apt : apartments) {
             List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
-            if (photos != null && !photos.isEmpty()) {
-                apartmentMainPhotoMap.put(apt.getApartmentNumber(), photos.get(0).getPhotoUrl());
-            } else {
-                apartmentMainPhotoMap.put(apt.getApartmentNumber(), "/css/image.png");
+            String mainPhotoUrl = "/css/image.png";
+            for (ApartmentPhoto p : photos) {
+                if (Boolean.TRUE.equals(p.getIsCover())) {
+                    mainPhotoUrl = p.getPhotoUrl();
+                    break;
+                }
             }
+            // Nếu không có ảnh bìa, lấy ảnh đầu tiên nếu có
+            if (mainPhotoUrl.equals("/css/image.png") && photos != null && !photos.isEmpty()) {
+                mainPhotoUrl = photos.get(0).getPhotoUrl();
+            }
+            apartmentMainPhotoMap.put(apt.getApartmentNumber(), mainPhotoUrl);
         }
         model.addAttribute("apartments", apartments);
         model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);

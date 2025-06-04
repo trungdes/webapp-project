@@ -137,7 +137,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="#notifications" data-bs-toggle="tab" role="tab">
                     <i class="bi bi-bell me-2"></i> Notifications
-                    <span class="notification-badge">3</span>
+                    <span class="notification-badge" th:if="${newNotifications > 0}" th:text="${newNotifications}"></span>
                 </a>
             </li>
         </ul>
@@ -424,11 +424,15 @@
                             <textarea class="form-control" id="editDescription" name="description" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Images</label>
-                            <input type="file" class="form-control" id="editPhotos" name="photos" multiple>
+                            <label class="form-label">Ảnh bìa (Cover Photo)</label>
+                            <input type="file" class="form-control" name="coverPhoto" accept="image/*">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Chọn ảnh bìa</label>
+                            <label class="form-label">Các ảnh khác (Other Photos)</label>
+                            <input type="file" class="form-control" name="photos" multiple accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ảnh bìa</label>
                             <div class="d-flex flex-wrap gap-2" th:if="${apartment != null and apartment.photos != null}">
                                 <div th:each="photo : ${apartment.photos}" class="text-center">
                                     <img th:src="@{${photo.photoUrl}}" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc; border-radius: 8px;">
@@ -563,9 +567,13 @@
                             <label class="form-label">Description</label>
                             <textarea class="form-control" name="description" rows="3"></textarea>
                         </div>
-                        <div class="row mb-3">
-                            <label for="photos" class="form-label">Photos</label>
-                            <input type="file" class="form-control" id="photos" name="photos" multiple>
+                        <div class="mb-3">
+                            <label class="form-label">Ảnh bìa (Cover Photo)</label>
+                            <input type="file" class="form-control" name="coverPhoto" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Các ảnh khác (Other Photos)</label>
+                            <input type="file" class="form-control" name="photos" multiple accept="image/*">
                         </div>
                     </div>
                     <div class="modal-footer">

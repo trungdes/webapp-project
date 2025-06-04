@@ -47,6 +47,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             .description(apartment.getDescription())
             .area(apartment.getArea())
             .type(apartment.getType())
+            .photos(apartment.getPhotos())
             .build();
     }
 

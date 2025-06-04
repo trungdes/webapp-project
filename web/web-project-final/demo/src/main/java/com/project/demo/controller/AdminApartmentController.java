@@ -24,20 +24,21 @@ import com.project.demo.model.Notification;
 @Controller
 public class AdminApartmentController {
 
-    @Autowired
-    private ApartmentService apartmentService;
+    private final ApartmentService apartmentService;
+    private final BuildingRepository buildingRepository;
+    private final ApartmentPhotoRepository apartmentPhotoRepository;
+    private final ViewingScheduleRepository viewingScheduleRepository;
+    private final NotificationRepository notificationRepository;
+    private final String uploadDir = "uploads";
 
     @Autowired
-    private BuildingRepository buildingRepository;
-
-    @Autowired
-    private ApartmentPhotoRepository apartmentPhotoRepository;
-
-    @Autowired
-    private ViewingScheduleRepository viewingScheduleRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
+    public AdminApartmentController(ApartmentService apartmentService, BuildingRepository buildingRepository, ApartmentPhotoRepository apartmentPhotoRepository, ViewingScheduleRepository viewingScheduleRepository, NotificationRepository notificationRepository) {
+        this.apartmentService = apartmentService;
+        this.buildingRepository = buildingRepository;
+        this.apartmentPhotoRepository = apartmentPhotoRepository;
+        this.viewingScheduleRepository = viewingScheduleRepository;
+        this.notificationRepository = notificationRepository;
+    }
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -56,8 +57,9 @@ public class AdminApartmentController {
             @RequestParam("building.buildingId") String buildingId,
             @RequestParam(value = "building.address", required = false) String buildingAddress,
             @RequestParam(value = "type", required = false) String type,
-            @RequestParam("photos") MultipartFile[] photos // nhận nhiều file
-    ) {
+            @RequestParam("coverPhoto") MultipartFile coverPhoto,
+            @RequestParam(value = "photos", required = false) MultipartFile[] photos
+    ) throws IOException {
         Building building = buildingRepository.findById(buildingId).orElse(null);
         if (building == null) {
             building = new Building();
@@ -66,48 +68,43 @@ public class AdminApartmentController {
             buildingRepository.save(building);
         }
         apartment.setBuilding(building);
-        
         // Set default type if not provided
         if (type == null || type.isEmpty()) {
             type = "SALE";
         }
         apartment.setType(type);
-        
-        System.out.println("Apartment: " + apartment);
-        System.out.println("Apartment.getBuilding(): " + apartment.getBuilding());
-        System.out.println("BuildingId: " + buildingId);
-        System.out.println("BuildingAddress: " + buildingAddress);
-        System.out.println("Type: " + type);
         apartmentService.saveApartment(apartment);
-
-        // Lưu ảnh
-        String uploadDir = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
+        String uploadDir = System.getProperty("user.dir") + File.separator + this.uploadDir + File.separator;
         File uploadDirFile = new File(uploadDir);
         if (!uploadDirFile.exists()) {
             uploadDirFile.mkdirs();
         }
-        System.out.println("Upload directory: " + uploadDir);
-
-        for (MultipartFile file : photos) {
-            if (!file.isEmpty()) {
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                File dest = new File(uploadDir + fileName);
-                try {
+        // Lưu ảnh bìa
+        if (coverPhoto != null && !coverPhoto.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename();
+            File dest = new File(uploadDir + fileName);
+            coverPhoto.transferTo(dest);
+            ApartmentPhoto photo = new ApartmentPhoto();
+            photo.setApartment(apartment);
+            photo.setPhotoUrl("/uploads/" + fileName);
+            photo.setIsCover(true);
+            apartmentPhotoRepository.save(photo);
+        }
+        // Lưu các ảnh khác
+        if (photos != null) {
+            for (MultipartFile file : photos) {
+                if (!file.isEmpty()) {
+                    String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                    File dest = new File(uploadDir + fileName);
                     file.transferTo(dest);
-                    System.out.println("Saved file to: " + dest.getAbsolutePath());
-                    // Lưu đường dẫn vào DB
                     ApartmentPhoto photo = new ApartmentPhoto();
                     photo.setApartment(apartment);
-                    photo.setPhotoUrl("/uploads/" + fileName);  // Thêm dấu / ở đầu
-                    System.out.println("Saved photo URL to DB: " + photo.getPhotoUrl());
+                    photo.setPhotoUrl("/uploads/" + fileName);
+                    photo.setIsCover(false);
                     apartmentPhotoRepository.save(photo);
-                } catch (IOException e) {
-                    System.err.println("Error saving file: " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
-
         return "redirect:/admin";
     }
 
@@ -147,14 +144,15 @@ public class AdminApartmentController {
             @RequestParam("building.buildingId") String buildingId,
             @RequestParam(value = "building.address", required = false) String buildingAddress,
             @RequestParam(value = "type", required = false) String type,
-            @RequestParam(value = "photos", required = false) MultipartFile[] photos
-    ) {
+            @RequestParam(value = "photos", required = false) MultipartFile[] photos,
+            @RequestParam(value = "coverPhoto", required = false) MultipartFile coverPhoto,
+            @RequestParam(value = "coverPhotoId", required = false) Long coverPhotoId
+    ) throws IOException {
         Apartment existing = apartmentService.findById(formApartment.getApartmentNumber());
         if (existing == null) {
             // handle not found
             return "redirect:/admin?error=notfound";
         }
-
         // Only update fields that are not null or not empty
         if (formApartment.getBedrooms() != null) existing.setBedrooms(formApartment.getBedrooms());
         if (formApartment.getBathrooms() != null) existing.setBathrooms(formApartment.getBathrooms());
@@ -163,7 +161,6 @@ public class AdminApartmentController {
         if (formApartment.getDescription() != null && !formApartment.getDescription().isEmpty())
             existing.setDescription(formApartment.getDescription());
         if (type != null && !type.isEmpty()) existing.setType(type);
-
         // Building logic
         Building building = buildingRepository.findById(buildingId).orElse(existing.getBuilding());
         if (building == null) {
@@ -173,11 +170,65 @@ public class AdminApartmentController {
             buildingRepository.save(building);
         }
         existing.setBuilding(building);
-
-        // (Optional) handle photos
-
+        String uploadDir = System.getProperty("user.dir") + File.separator + this.uploadDir + File.separator;
+        File uploadDirFile = new File(uploadDir);
+        if (!uploadDirFile.exists()) {
+            uploadDirFile.mkdirs();
+        }
+        // Lưu ảnh bìa mới nếu có
+        if (coverPhoto != null && !coverPhoto.isEmpty()) {
+            // Đặt tất cả ảnh hiện tại về isCover=false và xóa file vật lý của ảnh bìa cũ
+            List<ApartmentPhoto> allPhotos = apartmentPhotoRepository.findByApartmentApartmentNumber(existing.getApartmentNumber());
+            for (ApartmentPhoto photo : allPhotos) {
+                if (Boolean.TRUE.equals(photo.getIsCover()) && photo.getPhotoUrl() != null && !photo.getPhotoUrl().isEmpty()) {
+                    String fileName = photo.getPhotoUrl().startsWith("/uploads/") ? photo.getPhotoUrl().substring("/uploads/".length()) : photo.getPhotoUrl();
+                    String filePath = System.getProperty("user.dir") + File.separator + this.uploadDir + File.separator + fileName;
+                    java.io.File file = new java.io.File(filePath);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+                photo.setIsCover(false);
+                apartmentPhotoRepository.save(photo);
+            }
+            String fileName = System.currentTimeMillis() + "_" + coverPhoto.getOriginalFilename();
+            File dest = new File(uploadDir + fileName);
+            coverPhoto.transferTo(dest);
+            ApartmentPhoto newCover = new ApartmentPhoto();
+            newCover.setApartment(existing);
+            newCover.setPhotoUrl("/uploads/" + fileName);
+            newCover.setIsCover(true);
+            apartmentPhotoRepository.save(newCover);
+        }
+        // Lưu các ảnh khác nếu có
+        if (photos != null) {
+            for (MultipartFile file : photos) {
+                if (!file.isEmpty()) {
+                    String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                    File dest = new File(uploadDir + fileName);
+                    file.transferTo(dest);
+                    ApartmentPhoto photo = new ApartmentPhoto();
+                    photo.setApartment(existing);
+                    photo.setPhotoUrl("/uploads/" + fileName);
+                    photo.setIsCover(false);
+                    apartmentPhotoRepository.save(photo);
+                }
+            }
+        }
+        // Nếu chọn coverPhotoId từ radio cũ thì vẫn giữ logic cũ
+        if (coverPhotoId != null) {
+            ApartmentPhoto coverPhotoEntity = apartmentPhotoRepository.findById(coverPhotoId).orElse(null);
+            if (coverPhotoEntity != null) {
+                List<ApartmentPhoto> allPhotos = apartmentPhotoRepository.findByApartmentApartmentNumber(existing.getApartmentNumber());
+                for (ApartmentPhoto photo : allPhotos) {
+                    photo.setIsCover(false);
+                    apartmentPhotoRepository.save(photo);
+                }
+                coverPhotoEntity.setIsCover(true);
+                apartmentPhotoRepository.save(coverPhotoEntity);
+            }
+        }
         apartmentService.saveApartment(existing);
-
         return "redirect:/admin#apartments";
     }
 
