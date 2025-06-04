@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.demo.model.UserEntity;
 import com.project.demo.repository.UserRepository;
+import com.project.demo.dto.RegistrationDto;
+import com.project.demo.service.UserService;
 
 @Controller
 public class RegisterController {
@@ -17,6 +19,9 @@ public class RegisterController {
     
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/register")
     public String showRegisterForm() {
@@ -82,15 +87,12 @@ public class RegisterController {
         }
 
         try {
-            // Tạo user mới
-            UserEntity user = new UserEntity();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            userRepository.save(user);
-            
+            RegistrationDto registrationDto = new RegistrationDto();
+            registrationDto.setUsername(username);
+            registrationDto.setEmail(email);
+            registrationDto.setPassword(passwordEncoder.encode(password));
+            // Nếu muốn lưu firstName, lastName thì cần sửa UserServiceImpl
+            userService.saveUser(registrationDto);
             redirectAttributes.addFlashAttribute("success", "Đăng ký thành công! Hãy đăng nhập.");
             return "redirect:/";
         } catch (Exception e) {

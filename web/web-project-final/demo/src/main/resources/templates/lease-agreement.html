@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Create Lease Agreement - BÁN.NHÀ</title>
+    <th:block layout:fragment="css">
+        <style>
+            .lease-form {
+                background: white;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .apartment-info {
+                background: #f8f9fa;
+                padding: 1.5rem;
+                border-radius: 8px;
+                margin-bottom: 2rem;
+            }
+            .price-tag {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #3498db;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="text-center mb-4">Lease Agreement</h1>
+                    
+                    <!-- Success Message -->
+                    <div th:if="${param.success}" class="alert alert-success text-center mb-4">
+                        Your lease agreement request has been submitted successfully! We will contact you soon.
+                    </div>
+
+                    <!-- Apartment Info -->
+                    <div class="apartment-info">
+                        <h3 th:text="${'Apartment ' + apartment.apartmentNumber}">Apartment Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Address:</strong> <span th:text="${apartment.building != null ? apartment.building.address : 'N/A'}"></span></p>
+                                <p><strong>Bedrooms:</strong> <span th:text="${apartment.bedrooms}"></span></p>
+                                <p><strong>Bathrooms:</strong> <span th:text="${apartment.bathrooms}"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Area:</strong> <span th:text="${apartment.area + ' m²'}"></span></p>
+                                <p class="price-tag" th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND/month'}"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lease Agreement Form -->
+                    <form th:action="@{/lease-agreements}" method="post" class="lease-form">
+                        <input type="hidden" name="apartment.apartmentNumber" th:value="${apartment.apartmentNumber}">
+                        <input type="hidden" name="building.buildingId" th:value="${apartment.building.buildingId}">
+                        <input type="hidden" name="monthlyRent" th:value="${apartment.price}">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="securityDeposit" class="form-label">Security Deposit (VND)</label>
+                            <input type="number" class="form-control" id="securityDeposit" name="securityDeposit" 
+                                   th:value="${apartment.price}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tenantName" class="form-label">Tenant Name</label>
+                            <input type="text" class="form-control" id="tenantName" name="tenantName" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tenantPhone" class="form-label">Tenant Phone</label>
+                            <input type="tel" class="form-control" id="tenantPhone" name="tenantPhone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tenantEmail" class="form-label">Tenant Email</label>
+                            <input type="email" class="form-control" id="tenantEmail" name="tenantEmail" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tenantId" class="form-label">Tenant ID/Passport Number</label>
+                            <input type="text" class="form-control" id="tenantId" name="tenantId" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a th:href="@{/apartments/{id}(id=${apartment.apartmentNumber})}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Validate dates
+            document.getElementById('startDate').addEventListener('change', function() {
+                document.getElementById('endDate').min = this.value;
+            });
+            
+            document.getElementById('endDate').addEventListener('change', function() {
+                document.getElementById('startDate').max = this.value;
+            });
+        </script>
+    </th:block>
+</body>
+</html> 

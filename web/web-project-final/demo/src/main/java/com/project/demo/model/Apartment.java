@@ -28,8 +28,12 @@ import lombok.Setter;
 @Builder
 public class Apartment {
     @Id
-    @Column(name = "apartment_number")
+    @Column(name = "ApartmentNumber")
     private String apartmentNumber;    
+    
+    @ManyToOne
+    @JoinColumn(name = "BuildingID")
+    private Building building;
     
     @Column(name = "Bedrooms")
     private Integer bedrooms;
@@ -37,25 +41,30 @@ public class Apartment {
     @Column(name = "Bathrooms")
     private Integer bathrooms;
     
+    @Column(name = "Area")
+    private Double area;
+    
     @Column(name = "Price")
     private Double price;
     
-    @ManyToOne
-    @JoinColumn(name = "building_id")
-    private Building building;
+    @Column(name = "Type")
+    private String type; // SALE or RENT
+    
+    @Column(name = "status")
+    private String status; // AVAILABLE, RENTED, SOLD
+    
+    @Column(name = "current_tenant_email")
+    private String currentTenantEmail;
 
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @org.springframework.data.annotation.Transient
     private List<ApartmentPhoto> photos;
 
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
+    private List<ViewingSchedule> viewingSchedules;
+
     @Column(name = "Description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "Area")
-    private Double area;
-
-    @Column(name = "Type")
-    private String type; // "RENT" or "SALE"
 
     @Override
     public String toString() {

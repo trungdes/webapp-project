@@ -18,4 +18,7 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "apartment_number")
     private Apartment apartment;
+
+    @Column(name = "tenant_email")
+    private String tenantEmail;
 } 

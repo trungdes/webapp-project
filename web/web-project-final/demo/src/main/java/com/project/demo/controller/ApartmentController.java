@@ -13,6 +13,8 @@ import com.project.demo.service.ApartmentService;
 import com.project.demo.dto.ApartmentDto;
 import com.project.demo.model.Apartment;
 import com.project.demo.model.ApartmentPhoto;
+import com.project.demo.model.ViewingSchedule;
+import com.project.demo.repository.ViewingScheduleRepository;
 
 import java.util.List;
 import java.util.HashMap;
@@ -22,9 +24,11 @@ import java.util.Map;
 public class ApartmentController {
 
     private final ApartmentService apartmentService;
+    private final ViewingScheduleRepository viewingScheduleRepository;
 
-    public ApartmentController(ApartmentService apartmentService) {
+    public ApartmentController(ApartmentService apartmentService, ViewingScheduleRepository viewingScheduleRepository) {
         this.apartmentService = apartmentService;
+        this.viewingScheduleRepository = viewingScheduleRepository;
     }
 
     @GetMapping("/apartments")
@@ -153,7 +157,7 @@ public class ApartmentController {
             Model model) {
         
         List<ApartmentDto> apartments = apartmentService.findAllApartments().stream()
-            .filter(apt -> "RENT".equals(apt.getType()))
+            .filter(apt -> "RENT".equals(apt.getType()) && (apt.getStatus() == null || !"RENTED".equals(apt.getStatus())))
             .toList();
         
         if (bedrooms != null && !bedrooms.isEmpty()) {

@@ -53,7 +53,7 @@ public class ViewingScheduleController {
         notificationRepository.save(notification);
 
         model.addAttribute("message", "Lịch xem nhà đã được đặt thành công!");
-        return "redirect:/apartments/" + apartmentNumber;
+        return "redirect:/apartments/" + apartmentNumber + "?success=true";
     }
 
     @GetMapping("/admin/viewing-schedules")

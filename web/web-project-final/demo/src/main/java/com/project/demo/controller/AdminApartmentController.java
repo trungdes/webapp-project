@@ -20,6 +20,8 @@ import java.util.List;
 import com.project.demo.dto.ApartmentDto;
 import com.project.demo.model.ViewingSchedule;
 import com.project.demo.model.Notification;
+import com.project.demo.service.LeaseAgreementService;
+import com.project.demo.model.LeaseAgreement;
 
 @Controller
 public class AdminApartmentController {
@@ -29,15 +31,17 @@ public class AdminApartmentController {
     private final ApartmentPhotoRepository apartmentPhotoRepository;
     private final ViewingScheduleRepository viewingScheduleRepository;
     private final NotificationRepository notificationRepository;
+    private final LeaseAgreementService leaseAgreementService;
     private final String uploadDir = "uploads";
 
     @Autowired
-    public AdminApartmentController(ApartmentService apartmentService, BuildingRepository buildingRepository, ApartmentPhotoRepository apartmentPhotoRepository, ViewingScheduleRepository viewingScheduleRepository, NotificationRepository notificationRepository) {
+    public AdminApartmentController(ApartmentService apartmentService, BuildingRepository buildingRepository, ApartmentPhotoRepository apartmentPhotoRepository, ViewingScheduleRepository viewingScheduleRepository, NotificationRepository notificationRepository, LeaseAgreementService leaseAgreementService) {
         this.apartmentService = apartmentService;
         this.buildingRepository = buildingRepository;
         this.apartmentPhotoRepository = apartmentPhotoRepository;
         this.viewingScheduleRepository = viewingScheduleRepository;
         this.notificationRepository = notificationRepository;
+        this.leaseAgreementService = leaseAgreementService;
     }
 
     @InitBinder
@@ -112,7 +116,8 @@ public class AdminApartmentController {
     public String adminPage(Model model) {
         List<ApartmentDto> apartments = apartmentService.findAllApartments();
         List<ViewingSchedule> viewingSchedules = viewingScheduleRepository.findAll();
-        List<Notification> notifications = notificationRepository.findAll();
+        List<Notification> notifications = notificationRepository.findByTenantEmailIsNull();
+        List<LeaseAgreement> leases = leaseAgreementService.getAllLeaseAgreements();
 
         // Số căn hộ
         int totalApartments = apartments.size();
@@ -130,6 +135,7 @@ public class AdminApartmentController {
         model.addAttribute("availableApartments", availableApartments);
         model.addAttribute("totalViewings", totalViewings);
         model.addAttribute("newNotifications", newNotifications);
+        model.addAttribute("leases", leases);
         return "admin";
     }
     @PostMapping("/admin/delete-apartment")
@@ -258,5 +264,70 @@ public class AdminApartmentController {
             }
         }
         return "redirect:/admin#notifications";
+    }
+
+    @GetMapping("/api/building-address")
+    @ResponseBody
+    public String getBuildingAddress(@RequestParam("buildingId") String buildingId) {
+        Building building = buildingRepository.findById(buildingId).orElse(null);
+        return building != null ? building.getAddress() : "";
+    }
+
+    @PostMapping("/admin/lease-accept")
+    public String acceptLease(@RequestParam("leaseId") Integer leaseId) {
+        LeaseAgreement lease = leaseAgreementService.getLeaseAgreementById(leaseId);
+        if (lease != null) {
+            // Cập nhật trạng thái hợp đồng
+            lease.setStatus("ACTIVE");
+            leaseAgreementService.saveLeaseAgreement(lease);
+
+            // Cập nhật trạng thái căn hộ
+            Apartment apartment = lease.getApartment();
+            apartment.setStatus("RENTED");
+            apartment.setCurrentTenantEmail(lease.getTenantEmail());
+            apartmentService.saveApartment(apartment);
+
+            // Tạo notification cho user
+            Notification notification = Notification.builder()
+                .message("Hợp đồng thuê của bạn đã được duyệt!")
+                .isRead(false)
+                .createdAt(java.time.LocalDateTime.now().toString())
+                .tenantEmail(lease.getTenantEmail())
+                .build();
+            notificationRepository.save(notification);
+        }
+        return "redirect:/admin#leases";
+    }
+
+    @PostMapping("/admin/lease-reject")
+    public String rejectLease(@RequestParam("leaseId") Integer leaseId) {
+        LeaseAgreement lease = leaseAgreementService.getLeaseAgreementById(leaseId);
+        if (lease != null) {
+            // Cập nhật trạng thái hợp đồng
+            lease.setStatus("REJECTED");
+            leaseAgreementService.saveLeaseAgreement(lease);
+
+            // Cập nhật trạng thái căn hộ
+            Apartment apartment = lease.getApartment();
+            apartment.setStatus("AVAILABLE");
+            apartment.setCurrentTenantEmail(null);
+            apartmentService.saveApartment(apartment);
+
+            // Tạo notification cho user
+            Notification notification = Notification.builder()
+                .message("Hợp đồng thuê của bạn đã bị từ chối.")
+                .isRead(false)
+                .createdAt(java.time.LocalDateTime.now().toString())
+                .tenantEmail(lease.getTenantEmail())
+                .build();
+            notificationRepository.save(notification);
+        }
+        return "redirect:/admin#leases";
+    }
+
+    @PostMapping("/admin/lease-delete")
+    public String deleteLease(@RequestParam("leaseId") Integer leaseId) {
+        leaseAgreementService.deleteLeaseAgreementById(leaseId);
+        return "redirect:/admin#leases";
     }
 } 

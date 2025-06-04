@@ -48,19 +48,33 @@
 
             .gallery-img {
                 width: 100%;
-                height: 300px;
+                height: 450px;
                 object-fit: cover;
                 border-radius: 8px;
                 margin-bottom: 1rem;
             }
 
-            .thumbnail {
+            .gallery-thumbnails-scroll {
+                display: flex;
+                flex-direction: row;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scrollbar-width: thin;
                 width: 100%;
+            }
+
+            .gallery-thumbnails-scroll > div {
+                flex: 0 0 auto;
+            }
+
+            .thumbnail {
+                width: 200px;
                 height: 100px;
                 object-fit: cover;
                 border-radius: 4px;
                 cursor: pointer;
-                transition: opacity 0.3s ease;
+                transition: opacity 0.3s;
             }
 
             .thumbnail:hover {
@@ -172,8 +186,8 @@
                         <h2 class="mb-4">Photo Gallery</h2>
                         <div th:if="${photos != null and !photos.isEmpty()}">
                             <img th:src="@{${photos[0].photoUrl}}" class="gallery-img" alt="Main Photo" id="mainGalleryImg">
-                            <div class="row g-2 mt-2">
-                                <div class="col-3" th:each="photo, iterStat : ${photos}" th:if="${iterStat.index > 0}">
+                            <div class="gallery-thumbnails-scroll mt-2">
+                                <div th:each="photo, iterStat : ${photos}" th:if="${iterStat.index > 0}">
                                     <img th:src="@{${photo.photoUrl}}" class="thumbnail" alt="Apartment Photo" onclick="changeMainPhoto(this)">
                                 </div>
                             </div>
@@ -181,7 +195,7 @@
                         <div th:if="${photos == null or photos.isEmpty()}">
                             <img src="/css/image.png" class="gallery-img" alt="No Photo">
                         </div>
-                        <div>Số ảnh: <span th:text="${#lists.size(photos)}"></span></div>
+                        
                     </section>
 
                     <!-- Amenities -->
@@ -238,52 +252,8 @@
                 <div class="col-lg-4">
                     <div class="contact-form">
                         <div class="price-tag text-center" th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
-                        <form>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Your Name</label>
-                                <input type="text" class="form-control" id="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="phone" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" rows="4" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Contact Agent</button>
-                            <button type="button" class="btn btn-outline-primary w-100 mt-2" data-bs-toggle="modal" data-bs-target="#scheduleModal">
-                                Schedule Viewing
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule Viewing Modal -->
-        <div class="modal fade" id="scheduleModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Schedule a Viewing</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
                         <form id="scheduleForm" th:action="@{/schedule-viewing}" method="post">
                             <input type="hidden" name="apartmentNumber" th:value="${apartment.apartmentNumber}" />
-                            <div class="mb-3">
-                                <label for="viewing-date" class="form-label">Preferred Date</label>
-                                <input type="date" class="form-control" id="viewing-date" name="date" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="viewing-time" class="form-label">Preferred Time</label>
-                                <input type="time" class="form-control" id="viewing-time" name="time" required>
-                            </div>
                             <div class="mb-3">
                                 <label for="schedule-name" class="form-label">Your Name</label>
                                 <input type="text" class="form-control" id="schedule-name" name="name" required>
@@ -297,6 +267,14 @@
                                 <input type="tel" class="form-control" id="schedule-phone" name="phone" required>
                             </div>
                             <div class="mb-3">
+                                <label for="viewing-date" class="form-label">Preferred Date</label>
+                                <input type="date" class="form-control" id="viewing-date" name="date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="viewing-time" class="form-label">Preferred Time</label>
+                                <input type="time" class="form-control" id="viewing-time" name="time" required>
+                            </div>
+                            <div class="mb-3">
                                 <label for="schedule-notes" class="form-label">Additional Notes</label>
                                 <textarea class="form-control" id="schedule-notes" name="notes" rows="3"></textarea>
                             </div>
@@ -305,6 +283,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div th:if="${param.success}">
+            <div class="alert alert-success text-center">Đặt lịch xem nhà thành công! Chúng tôi sẽ liên hệ với bạn sớm.</div>
         </div>
     </div>
 

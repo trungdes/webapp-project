@@ -271,23 +271,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>LC001</td>
-                                <td>John Doe</td>
-                                <td>A101</td>
-                                <td>2024-01-01</td>
-                                <td>2024-12-31</td>
-                                <td><span class="status-badge status-active">Active</span></td>
+                            <tr th:each="lease : ${leases}">
+                                <td th:text="${lease.leaseId}">LC001</td>
+                                <td th:text="${lease.tenantName}">John Doe</td>
+                                <td th:text="${lease.apartment != null ? lease.apartment.apartmentNumber : 'N/A'}">A101</td>
+                                <td th:text="${lease.startDate}">2024-01-01</td>
+                                <td th:text="${lease.endDate}">2024-12-31</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">
+                                    <span th:classappend="
+                                        ${lease.status} == 'ACTIVE' ? 'status-badge status-active' :
+                                        (${lease.status} == 'WAITING' ? 'status-badge status-pending' :
+                                        (${lease.status} == 'REJECTED' ? 'status-badge status-expired' : 'status-badge'))"
+                                        th:text="
+                                        ${lease.status} == 'ACTIVE' ? 'Active' :
+                                        (${lease.status} == 'WAITING' ? 'Waiting' :
+                                        (${lease.status} == 'REJECTED' ? 'Rejected' : ${lease.status}))">
+                                        Waiting
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)"
+                                       class="btn btn-sm btn-primary btn-view-lease"
+                                       th:attr="data-lease-id=${lease.leaseId},
+                                                data-tenant-name=${lease.tenantName},
+                                                data-apartment=${lease.apartment != null ? lease.apartment.apartmentNumber : 'N/A'},
+                                                data-start-date=${lease.startDate},
+                                                data-end-date=${lease.endDate},
+                                                data-monthly-rent=${#numbers.formatDecimal(lease.monthlyRent, 0, 'COMMA', 0, 'POINT')},
+                                                data-security-deposit=${#numbers.formatDecimal(lease.securityDeposit, 0, 'COMMA', 0, 'POINT')},
+                                                data-tenant-phone=${lease.tenantPhone},
+                                                data-tenant-email=${lease.tenantEmail},
+                                                data-tenant-id=${lease.tenantId}">
                                         <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-warning">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
+                                    </a>
+                                    <form th:if="${lease.status} == 'WAITING'" th:action="@{/admin/lease-accept}" method="post" style="display:inline">
+                                        <input type="hidden" name="leaseId" th:value="${lease.leaseId}" />
+                                        <button type="submit" class="btn btn-sm btn-success ms-1">Accept</button>
+                                    </form>
+                                    <form th:if="${lease.status} == 'WAITING'" th:action="@{/admin/lease-reject}" method="post" style="display:inline">
+                                        <input type="hidden" name="leaseId" th:value="${lease.leaseId}" />
+                                        <button type="submit" class="btn btn-sm btn-danger ms-1">Reject</button>
+                                    </form>
+                                    <form th:action="@{/admin/lease-delete}" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa hợp đồng này?');">
+                                        <input type="hidden" name="leaseId" th:value="${lease.leaseId}" />
+                                        <button type="submit" class="btn btn-sm btn-danger ms-1"><i class="bi bi-trash"></i></button>
+                                    </form>
                                 </td>
                             </tr>
-                            <!-- More lease rows -->
                         </tbody>
                     </table>
                 </div>
@@ -357,7 +387,7 @@
                                 <div class="fw-bold" th:text="${noti.message}" style="color: #212529;">New Viewing Request</div>
                                 <div class="small" th:text="${noti.apartment != null ? 'Apartment: ' + noti.apartment.apartmentNumber : ''}" style="color: #495057;"></div>
                                 <div class="small" th:text="${noti.createdAt}" style="color: #495057;"></div>
-                            </div>
+                        </div>
                             <div th:if="${!noti.isRead}" class="badge bg-primary align-self-center">New</div>
                         </button>
                     </form>
@@ -393,7 +423,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Price (VND)</label>
-                                <input type="number" class="form-control" id="editPrice" name="price" min="0">
+                                <input type="text" class="form-control price-input" name="price" required>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -537,17 +567,17 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Building ID</label>
-                                <input type="text" class="form-control" name="building.buildingId" required>
+                                <input type="text" class="form-control" id="buildingIdInput" name="building.buildingId" required>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Building Address</label>
-                                <input type="text" class="form-control" name="building.address" placeholder="Building Address">
+                                <input type="text" class="form-control" id="buildingAddressInput" name="building.address" placeholder="Building Address">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Price (VND)</label>
-                                <input type="number" class="form-control" name="price" min="0" required>
+                                <input type="text" class="form-control price-input" name="price" required>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -568,11 +598,11 @@
                             <textarea class="form-control" name="description" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Ảnh bìa (Cover Photo)</label>
+                            <label class="form-label">Cover Photo</label>
                             <input type="file" class="form-control" name="coverPhoto" accept="image/*" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Các ảnh khác (Other Photos)</label>
+                            <label class="form-label">Other Photos</label>
                             <input type="file" class="form-control" name="photos" multiple accept="image/*">
                         </div>
                     </div>
@@ -581,6 +611,32 @@
                         <button type="submit" class="btn btn-primary">Add Apartment</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lease Summary Modal -->
+    <div class="modal fade" id="leaseSummaryModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Lease Contract Summary</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li class="list-group-item"><strong>Contract ID:</strong> <span id="modalLeaseId"></span></li>
+              <li class="list-group-item"><strong>Tenant Name:</strong> <span id="modalTenantName"></span></li>
+              <li class="list-group-item"><strong>Apartment:</strong> <span id="modalApartment"></span></li>
+              <li class="list-group-item"><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
+              <li class="list-group-item"><strong>End Date:</strong> <span id="modalEndDate"></span></li>
+              <li class="list-group-item"><strong>Monthly Rent:</strong> <span id="modalMonthlyRent"></span></li>
+              <li class="list-group-item"><strong>Security Deposit:</strong> <span id="modalSecurityDeposit"></span></li>
+              <li class="list-group-item"><strong>Tenant Phone:</strong> <span id="modalTenantPhone"></span></li>
+              <li class="list-group-item"><strong>Tenant Email:</strong> <span id="modalTenantEmail"></span></li>
+              <li class="list-group-item"><strong>Tenant ID:</strong> <span id="modalTenantId"></span></li>
+            </ul>
+          </div>
             </div>
         </div>
     </div>
@@ -635,10 +691,14 @@
                     el.value = this.getAttribute('data-building-address') || '';
                     el.placeholder = this.getAttribute('data-building-address') || '';
                 }
-                el = document.getElementById('editPrice');
+                el = document.querySelector('#editApartmentModal .price-input');
                 if (el) {
-                    el.value = this.getAttribute('data-price') || '';
-                    el.placeholder = this.getAttribute('data-price') || '';
+                    var priceValue = this.getAttribute('data-price') || '';
+                    if (priceValue) {
+                        el.value = Number(priceValue).toLocaleString('en-US');
+                    } else {
+                        el.value = '';
+                    }
                 }
                 el = document.getElementById('editBedrooms');
                 if (el) {
@@ -669,6 +729,60 @@
 
         activateTabFromHash();
         setupNotificationTab();
+
+        // Tự động điền địa chỉ khi nhập buildingId
+        var buildingIdInput = document.getElementById('buildingIdInput');
+        var buildingAddressInput = document.getElementById('buildingAddressInput');
+        if (buildingIdInput && buildingAddressInput) {
+            buildingIdInput.addEventListener('change', function() {
+                var buildingId = this.value;
+                if (buildingId) {
+                    fetch('/api/building-address?buildingId=' + encodeURIComponent(buildingId))
+                        .then(response => response.text())
+                        .then(address => {
+                            buildingAddressInput.value = address;
+                        });
+                } else {
+                    buildingAddressInput.value = '';
+                }
+            });
+        }
+
+        // Format price with comma and remove comma on submit
+        document.querySelectorAll('.price-input').forEach(function(priceInput) {
+            priceInput.addEventListener('input', function(e) {
+                var value = this.value.replace(/[^0-9]/g, '');
+                if (value) {
+                    this.value = Number(value).toLocaleString('en-US');
+                } else {
+                    this.value = '';
+                }
+                this.setSelectionRange(this.value.length, this.value.length);
+            });
+            var form = priceInput.closest('form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    priceInput.value = priceInput.value.replace(/[^0-9]/g, '');
+                });
+            }
+        });
+
+        document.querySelectorAll('.btn-view-lease').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('modalLeaseId').textContent = this.getAttribute('data-lease-id') || '';
+                document.getElementById('modalTenantName').textContent = this.getAttribute('data-tenant-name') || '';
+                document.getElementById('modalApartment').textContent = this.getAttribute('data-apartment') || '';
+                document.getElementById('modalStartDate').textContent = this.getAttribute('data-start-date') || '';
+                document.getElementById('modalEndDate').textContent = this.getAttribute('data-end-date') || '';
+                document.getElementById('modalMonthlyRent').textContent = this.getAttribute('data-monthly-rent') || '';
+                document.getElementById('modalSecurityDeposit').textContent = this.getAttribute('data-security-deposit') || '';
+                document.getElementById('modalTenantPhone').textContent = this.getAttribute('data-tenant-phone') || '';
+                document.getElementById('modalTenantEmail').textContent = this.getAttribute('data-tenant-email') || '';
+                document.getElementById('modalTenantId').textContent = this.getAttribute('data-tenant-id') || '';
+                var modal = new bootstrap.Modal(document.getElementById('leaseSummaryModal'));
+                modal.show();
+            });
+        });
     });
     window.addEventListener('load', function() {
         activateTabFromHash();

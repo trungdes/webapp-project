@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.project.demo.model.UserEntity;
 import com.project.demo.repository.UserRepository;
+import com.project.demo.repository.NotificationRepository;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -24,8 +26,16 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @GetMapping("/")
-    public String home() {
+    public String home(Model model, @SessionAttribute(value = "user", required = false) com.project.demo.model.UserEntity user) {
+        int unreadUserNotifications = 0;
+        if (user != null) {
+            unreadUserNotifications = notificationRepository.findByTenantEmailAndIsReadFalse(user.getEmail()).size();
+        }
+        model.addAttribute("unreadUserNotifications", unreadUserNotifications);
         return "index";
     }
 

@@ -21,4 +21,5 @@ public class ApartmentDto {
     private double area;
     private String type;
     private List<ApartmentPhoto> photos;
+    private String status;
 }

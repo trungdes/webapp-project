@@ -128,6 +128,9 @@
     </th:block>
 </head>
 <body>
+    <div th:if="${success}" class="alert alert-success text-center" style="margin-top: 20px;">
+        <span th:text="${success}"></span>
+    </div>
     <div layout:fragment="content">
         <!-- Modern Hero Section -->
         <section class="hero-section">

@@ -22,6 +22,9 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -42,13 +45,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/image/**",
                                "/apartments", "/apartments/**", "/our-agent", "/sell", "/uploads/**", "/lease").permitAll()
-                .requestMatchers("/admin/**").hasRole("MANAGER")
+                .requestMatchers("/admin/**").hasAuthority("MANAGER")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/")
                 .loginProcessingUrl("/login")
-                .successHandler(new CustomAuthenticationSuccessHandler())
+                .successHandler(authenticationSuccessHandler)
                 .failureUrl("/?error=true")
                 .permitAll()
             )

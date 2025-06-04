@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.project.demo.dto.ApartmentDto;
 import com.project.demo.dto.BuildingDto;
@@ -11,12 +12,18 @@ import com.project.demo.model.Apartment;
 import com.project.demo.model.ApartmentPhoto;
 import com.project.demo.repository.ApartmentRepository;
 import com.project.demo.repository.ApartmentPhotoRepository;
+import com.project.demo.repository.ViewingScheduleRepository;
+import com.project.demo.repository.NotificationRepository;
 import com.project.demo.service.ApartmentService;
 
 @Service
 public class ApartmentServiceImpl implements ApartmentService {
     private ApartmentRepository apartmentRepository;
     private ApartmentPhotoRepository apartmentPhotoRepository;
+    @Autowired
+    private ViewingScheduleRepository viewingScheduleRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public ApartmentServiceImpl(ApartmentRepository apartmentRepository, ApartmentPhotoRepository apartmentPhotoRepository) {
         this.apartmentRepository = apartmentRepository;
@@ -48,6 +55,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             .area(apartment.getArea())
             .type(apartment.getType())
             .photos(apartment.getPhotos())
+            .status(apartment.getStatus())
             .build();
     }
 
@@ -88,13 +96,17 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public void deleteApartmentByNumber(String apartmentNumber) {
-        // Xóa file ảnh vật lý
+        // Xóa notification liên quan
+        notificationRepository.deleteByApartmentApartmentNumber(apartmentNumber);
+        // Xóa viewing schedule liên quan
+        viewingScheduleRepository.deleteByApartmentApartmentNumber(apartmentNumber);
+        // Lấy danh sách ảnh liên quan
         List<ApartmentPhoto> photos = apartmentPhotoRepository.findPhotosByApartmentNumber(apartmentNumber);
+        // Xóa file vật lý
         if (photos != null) {
             for (ApartmentPhoto photo : photos) {
                 String photoUrl = photo.getPhotoUrl();
                 if (photoUrl != null && !photoUrl.isEmpty()) {
-                    // Loại bỏ dấu / ở đầu nếu có
                     String fileName = photoUrl.startsWith("/uploads/") ? photoUrl.substring("/uploads/".length()) : photoUrl;
                     String uploadDir = System.getProperty("user.dir") + java.io.File.separator + "uploads" + java.io.File.separator;
                     java.io.File file = new java.io.File(uploadDir + fileName);
@@ -104,7 +116,7 @@ public class ApartmentServiceImpl implements ApartmentService {
                 }
             }
         }
-        // Xóa bản ghi ảnh trong DB (nếu chưa cascade)
+        // Xóa bản ghi ảnh trong DB
         apartmentPhotoRepository.deleteAll(photos);
         // Xóa căn hộ
         apartmentRepository.deleteById(apartmentNumber);
