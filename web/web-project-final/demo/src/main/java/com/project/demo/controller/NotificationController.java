@@ -29,6 +29,17 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
+    @GetMapping("/unread/count")
+    public ResponseEntity<Integer> getUnreadCount(HttpSession session) {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        int count = notificationRepository.findByTenantEmailAndIsReadFalse(user.getEmail()).size();
+        return ResponseEntity.ok(count);
+    }
+
     @PostMapping("/{id}/read")
     public ResponseEntity<Void> markAsRead(@PathVariable Long id) {
         Notification notification = notificationRepository.findById(id).orElse(null);

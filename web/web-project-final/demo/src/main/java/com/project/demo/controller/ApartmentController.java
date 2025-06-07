@@ -36,21 +36,22 @@ public class ApartmentController {
             @RequestParam(required = false) String bedrooms,
             @RequestParam(required = false) String bathrooms,
             @RequestParam(required = false) String priceRange,
-            @RequestParam(required = false) String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
             Model model) {
         
-        List<ApartmentDto> apartments = apartmentService.findAllApartments().stream()
+        List<ApartmentDto> allApartments = apartmentService.findAllApartments().stream()
             .filter(apt -> "SALE".equals(apt.getType()))
             .toList();
         
         if (bedrooms != null && !bedrooms.isEmpty()) {
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getBedrooms() == Integer.parseInt(bedrooms))
                 .toList();
         }
         
         if (bathrooms != null && !bathrooms.isEmpty()) {
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getBathrooms() == Integer.parseInt(bathrooms))
                 .toList();
         }
@@ -60,36 +61,33 @@ public class ApartmentController {
             double minPrice = Double.parseDouble(range[0]);
             double maxPrice = Double.parseDouble(range[1]);
             
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getPrice() >= minPrice && apt.getPrice() <= maxPrice)
                 .toList();
         }
+
+        // Calculate pagination
+        int totalApartments = allApartments.size();
+        int totalPages = (int) Math.ceil((double) totalApartments / size);
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, totalApartments);
         
-        if (location != null && !location.isEmpty()) {
-            apartments = apartments.stream()
-                .filter(apt -> apt.getBuilding() != null && 
-                       apt.getBuilding().getAddress().toLowerCase().contains(location.toLowerCase()))
-                .toList();
-        }
+        List<ApartmentDto> paginatedApartments = allApartments.subList(startIndex, endIndex);
         
+        // Create photo map
         Map<String, String> apartmentMainPhotoMap = new HashMap<>();
-        for (ApartmentDto apt : apartments) {
-            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
-            String mainPhotoUrl = "/css/image.png";
-            for (ApartmentPhoto p : photos) {
-                if (Boolean.TRUE.equals(p.getIsCover())) {
-                    mainPhotoUrl = p.getPhotoUrl();
-                    break;
-                }
+        for (ApartmentDto apartment : paginatedApartments) {
+            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apartment.getApartmentNumber());
+            if (!photos.isEmpty()) {
+                apartmentMainPhotoMap.put(apartment.getApartmentNumber(), photos.get(0).getPhotoUrl());
             }
-            // Nếu không có ảnh bìa, lấy ảnh đầu tiên nếu có
-            if (mainPhotoUrl.equals("/css/image.png") && photos != null && !photos.isEmpty()) {
-                mainPhotoUrl = photos.get(0).getPhotoUrl();
-            }
-            apartmentMainPhotoMap.put(apt.getApartmentNumber(), mainPhotoUrl);
         }
-        model.addAttribute("apartments", apartments);
+        
+        model.addAttribute("apartments", paginatedApartments);
         model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        
         return "apartments";
     }
 
@@ -153,21 +151,22 @@ public class ApartmentController {
             @RequestParam(required = false) String bedrooms,
             @RequestParam(required = false) String bathrooms,
             @RequestParam(required = false) String priceRange,
-            @RequestParam(required = false) String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
             Model model) {
         
-        List<ApartmentDto> apartments = apartmentService.findAllApartments().stream()
+        List<ApartmentDto> allApartments = apartmentService.findAllApartments().stream()
             .filter(apt -> "RENT".equals(apt.getType()) && (apt.getStatus() == null || !"RENTED".equals(apt.getStatus())))
             .toList();
         
         if (bedrooms != null && !bedrooms.isEmpty()) {
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getBedrooms() == Integer.parseInt(bedrooms))
                 .toList();
         }
         
         if (bathrooms != null && !bathrooms.isEmpty()) {
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getBathrooms() == Integer.parseInt(bathrooms))
                 .toList();
         }
@@ -177,36 +176,33 @@ public class ApartmentController {
             double minPrice = Double.parseDouble(range[0]);
             double maxPrice = Double.parseDouble(range[1]);
             
-            apartments = apartments.stream()
+            allApartments = allApartments.stream()
                 .filter(apt -> apt.getPrice() >= minPrice && apt.getPrice() <= maxPrice)
                 .toList();
         }
+
+        // Calculate pagination
+        int totalApartments = allApartments.size();
+        int totalPages = (int) Math.ceil((double) totalApartments / size);
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, totalApartments);
         
-        if (location != null && !location.isEmpty()) {
-            apartments = apartments.stream()
-                .filter(apt -> apt.getBuilding() != null && 
-                       apt.getBuilding().getAddress().toLowerCase().contains(location.toLowerCase()))
-                .toList();
-        }
+        List<ApartmentDto> paginatedApartments = allApartments.subList(startIndex, endIndex);
         
+        // Create photo map
         Map<String, String> apartmentMainPhotoMap = new HashMap<>();
-        for (ApartmentDto apt : apartments) {
-            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apt.getApartmentNumber());
-            String mainPhotoUrl = "/css/image.png";
-            for (ApartmentPhoto p : photos) {
-                if (Boolean.TRUE.equals(p.getIsCover())) {
-                    mainPhotoUrl = p.getPhotoUrl();
-                    break;
-                }
+        for (ApartmentDto apartment : paginatedApartments) {
+            List<ApartmentPhoto> photos = apartmentService.findPhotosByApartmentNumber(apartment.getApartmentNumber());
+            if (!photos.isEmpty()) {
+                apartmentMainPhotoMap.put(apartment.getApartmentNumber(), photos.get(0).getPhotoUrl());
             }
-            // Nếu không có ảnh bìa, lấy ảnh đầu tiên nếu có
-            if (mainPhotoUrl.equals("/css/image.png") && photos != null && !photos.isEmpty()) {
-                mainPhotoUrl = photos.get(0).getPhotoUrl();
-            }
-            apartmentMainPhotoMap.put(apt.getApartmentNumber(), mainPhotoUrl);
         }
-        model.addAttribute("apartments", apartments);
+        
+        model.addAttribute("apartments", paginatedApartments);
         model.addAttribute("apartmentMainPhotoMap", apartmentMainPhotoMap);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        
         return "lease";
     }
 }

@@ -13,6 +13,9 @@
                 padding: 6rem 0;
                 color: white;
                 position: relative;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                -ms-interpolation-mode: nearest-neighbor;
             }
 
             .apartment-title {
@@ -20,6 +23,7 @@
                 font-weight: 600;
                 margin-bottom: 1rem;
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                color: white;
             }
 
             .feature-card {
@@ -52,6 +56,12 @@
                 object-fit: cover;
                 border-radius: 8px;
                 margin-bottom: 1rem;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                -ms-interpolation-mode: nearest-neighbor;
+                backface-visibility: hidden;
+                transform: translateZ(0);
+                -webkit-font-smoothing: subpixel-antialiased;
             }
 
             .gallery-thumbnails-scroll {
@@ -75,6 +85,12 @@
                 border-radius: 4px;
                 cursor: pointer;
                 transition: opacity 0.3s;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                -ms-interpolation-mode: nearest-neighbor;
+                backface-visibility: hidden;
+                transform: translateZ(0);
+                -webkit-font-smoothing: subpixel-antialiased;
             }
 
             .thumbnail:hover {

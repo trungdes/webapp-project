@@ -282,10 +282,12 @@ public class AdminApartmentController {
             leaseAgreementService.saveLeaseAgreement(lease);
 
             // Cập nhật trạng thái căn hộ
-            Apartment apartment = lease.getApartment();
-            apartment.setStatus("RENTED");
-            apartment.setCurrentTenantEmail(lease.getTenantEmail());
-            apartmentService.saveApartment(apartment);
+            if (lease.getApartment() != null) {
+                apartmentService.updateApartmentStatus(lease.getApartment().getApartmentNumber(), "RENTED");
+                Apartment apartment = lease.getApartment();
+                apartment.setCurrentTenantEmail(lease.getTenantEmail());
+                apartmentService.saveApartment(apartment);
+            }
 
             // Tạo notification cho user
             Notification notification = Notification.builder()
@@ -308,10 +310,12 @@ public class AdminApartmentController {
             leaseAgreementService.saveLeaseAgreement(lease);
 
             // Cập nhật trạng thái căn hộ
-            Apartment apartment = lease.getApartment();
-            apartment.setStatus("AVAILABLE");
-            apartment.setCurrentTenantEmail(null);
-            apartmentService.saveApartment(apartment);
+            if (lease.getApartment() != null) {
+                apartmentService.updateApartmentStatus(lease.getApartment().getApartmentNumber(), "AVAILABLE");
+                Apartment apartment = lease.getApartment();
+                apartment.setCurrentTenantEmail(null);
+                apartmentService.saveApartment(apartment);
+            }
 
             // Tạo notification cho user
             Notification notification = Notification.builder()
@@ -327,7 +331,7 @@ public class AdminApartmentController {
 
     @PostMapping("/admin/lease-delete")
     public String deleteLease(@RequestParam("leaseId") Integer leaseId) {
-        leaseAgreementService.deleteLeaseAgreementById(leaseId);
+        leaseAgreementService.deleteLeaseAgreement(leaseId);
         return "redirect:/admin#leases";
     }
 } 

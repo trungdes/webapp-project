@@ -22,4 +22,6 @@ public interface ApartmentService {
     void deleteApartmentByNumber(String apartmentNumber);
 
     Apartment findById(String apartmentNumber);
+
+    void updateApartmentStatus(String apartmentNumber, String status);
 }

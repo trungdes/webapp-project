@@ -2,43 +2,83 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <title>Home</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
     <th:block layout:fragment="css">
         <style>
+            body { font-family: 'Inter', Arial, sans-serif; }
             .hero-section {
-                padding: 4rem 0;
-                background: linear-gradient(135deg, #1B2B3B 0%, #2C3E50 100%);
-                color: white;
+                padding: 5rem 0 3rem 0;
+                background: #fff;
+                color: #222;
+                text-align: center;
+                position: relative;
+                min-height: 60vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .hero-section::before {
+                display: none;
             }
             .hero-content {
-                max-width: 800px;
-                margin: 0 auto;
-                text-align: center;
-                padding: 2rem;
+                opacity: 0;
+                transform: translateY(50px);
+                animation: slideUp 1s ease forwards;
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             .hero-content h1 {
-                font-size: 3.5rem;
+                font-size: 3.2rem;
+                font-weight: 700;
+                color: #222;
                 margin-bottom: 1.5rem;
+                line-height: 1.2;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             }
-            .highlight {
-                color: #3498db;
+            .hero-content p {
+                font-size: 1.5rem;
+                color: #444;
+                margin-bottom: 2.5rem;
+                font-weight: 400;
+                line-height: 1.6;
             }
-            .hero-cta {
-                display: inline-block;
-                padding: 1rem 2rem;
-                background: #3498db;
-                color: white;
-                text-decoration: none;
-                border-radius: 8px;
-                margin-top: 2rem;
-                transition: all 0.3s ease;
+            .hero-cta, .btn-primary {
+                color: #222;
+                background: transparent;
+                border: none;
+                font-weight: 600;
+                font-size: 1.1rem;
+                text-decoration: underline;
+                padding: 0;
+                margin-top: 1.5rem;
+                transition: color 0.2s;
             }
-            .hero-cta:hover {
-                background: #2980b9;
-                transform: translateY(-2px);
+            .hero-cta:hover, .btn-primary:hover {
+                color: #d98236;
+                background: transparent;
+                text-decoration: underline;
+            }
+            .about-section, .about-features, .scrolling-text {
+                animation: fadeInUp 1s ease;
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(40px);}
+                to { opacity: 1; transform: translateY(0);}
             }
             .about-section {
                 padding: 4rem 0;
                 background: #f8f9fa;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+                margin-bottom: 2rem;
             }
             .about-container {
                 max-width: 1200px;
@@ -57,6 +97,10 @@
             }
             .stat-item {
                 text-align: center;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+                background: #fff;
+                padding: 1.5rem 0;
             }
             .stat-number {
                 font-size: 2rem;
@@ -80,8 +124,13 @@
                 gap: 1rem;
                 padding: 1.5rem;
                 background: white;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+            .feature-item:hover {
+                transform: translateY(-8px) scale(1.03);
+                box-shadow: 0 8px 32px rgba(52,152,219,0.15);
             }
             .feature-icon {
                 font-size: 2rem;
@@ -95,11 +144,16 @@
                 color: #666;
             }
             .scrolling-text {
-                background: #1B2B3B;
-                color: white;
+                background: linear-gradient(90deg, #1B2B3B 60%, #3498db 100%);
+                color: #fff;
+                font-weight: 500;
+                font-size: 1.1rem;
+                letter-spacing: 1px;
                 padding: 1rem 0;
                 overflow: hidden;
                 white-space: nowrap;
+                border-top: 2px solid #3498db;
+                border-bottom: 2px solid #3498db;
             }
             .scrolling-text span {
                 display: inline-block;
@@ -123,6 +177,57 @@
                 right: 50%;
                 margin-left: -50vw;
                 margin-right: -50vw;
+                opacity: 0;
+                transform: translateY(50px);
+                animation: slideUp 1s ease forwards 0.5s;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                -ms-interpolation-mode: nearest-neighbor;
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .cta-banner {
+                background: #3498db;
+                color: white;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+                margin: 3rem auto 2rem auto;
+                max-width: 900px;
+            }
+            .service-cards-section {
+                background: #fff;
+                padding: 4rem 0 2rem 0;
+            }
+            .service-card {
+                border-radius: 18px;
+                overflow: hidden;
+                transition: transform 0.2s, box-shadow 0.2s;
+                border: none;
+            }
+            .service-card:hover {
+                transform: translateY(-8px) scale(1.03);
+                box-shadow: 0 8px 32px rgba(52,152,219,0.15);
+            }
+            .card-title {
+                font-weight: 600;
+                font-size: 1.25rem;
+            }
+            .card-text {
+                color: #555;
+            }
+            .btn-outline-primary {
+                border-radius: 24px;
+                font-weight: 600;
+                padding: 0.5rem 1.5rem;
             }
         </style>
     </th:block>
@@ -135,22 +240,59 @@
         <!-- Modern Hero Section -->
         <section class="hero-section">
             <div class="hero-content">
-                <h1>
-                    Welcome to our real estate platform
-                </h1>
-                <p>
-                    Welcome to our real estate platform, where you can easily buy or lease high-quality apartments.<br>
-                    Trusted by thousands of customers for our transparency, speed, and professional service.<br>
+                <h1 class="display-3 fw-bold mb-4">Welcome to our <span style="color: #d98236;">real estate</span> platform</h1>
+                <p class="lead mb-4">
+                    Easily <span style="color: #d98236;">buy</span> or <span style="color: #d98236;">lease</span> high-quality apartments.<br>
+                    Trusted by thousands for <span style="color: #d98236;">transparency</span>, <span style="color: #d98236;">speed</span>, and <span style="color: #d98236;">service</span>.<br>
                     Find your new home today!
                 </p>
-                <a th:href="@{/apartments}" class="hero-cta">
-                    Browse Our Selection <span>→</span>
-                </a>
+                <a th:href="@{/apartments}" class="btn btn-primary btn-lg px-4">Browse Our Selection</a>
             </div>
         </section>
 
         <!-- Hero Image (full width) -->
         <div class="hero-img-bg"></div>
+
+        <!-- Service Cards Section -->
+        <section class="service-cards-section py-5" style="background: #fff;">
+            <div class="container">
+                <h2 class="text-center mb-5" style="font-weight:700;">
+                    Whether you're <span style="color:#d98236;">buying</span>, <span style="color:#d98236;">selling</span> or <span style="color:#d98236;">leasing</span> apartments,<br>we help you succeed.
+                </h2>
+                <div class="row justify-content-center g-4">
+                    <div class="col-md-4">
+                        <div class="card service-card h-100 shadow-sm">
+                            <img src="/css/image1.jpg" class="card-img-top" alt="Buy an Apartment" style="object-fit:cover; height:220px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Buy an Apartment</h5>
+                                <p class="card-text">We help you find the right investment and home for your needs.</p>
+                                <a th:href="@{/apartments}" class="btn btn-outline-primary">Browse Buy</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card service-card h-100 shadow-sm">
+                            <img src="/css/image2.jpg" class="card-img-top" alt="Our Agents" style="object-fit:cover; height:220px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Our Agents</h5>
+                                <p class="card-text">Connect with our experienced agents for expert advice and personalized service.</p>
+                                <a th:href="@{/our-agent}" class="btn btn-outline-primary">Meet Our Agents</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card service-card h-100 shadow-sm">
+                            <img src="/css/image3.jpg" class="card-img-top" alt="Lease an Apartment" style="object-fit:cover; height:220px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Lease an Apartment</h5>
+                                <p class="card-text">From viewing to contract, we help you lease with confidence and ease.</p>
+                                <a th:href="@{/lease}" class="btn btn-outline-primary">Browse Lease</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- About Us Section -->
         <section id="about" class="about-section">
@@ -158,11 +300,11 @@
                 <div class="about-content">
                     <h2>About Us</h2>
                     <p>
-                        <strong>BÁN.NHÀ</strong> is a leading real estate company with over 21 years of experience in property sales, leasing, and investment.<br>
-                        We are committed to providing our clients with high-quality apartments at competitive prices.
+                        <strong style="color: #d98236;">BÁN.NHÀ</strong> is a <span style="color: #d98236;">leading real estate company</span> with over <span style="color: #d98236;">21 years</span> of experience in property sales, leasing, and investment.<br>
+                        We are committed to providing our clients with <span style="color: #d98236;">high-quality apartments</span> at competitive prices.
                     </p>
                     <p>
-                        Our team of experienced consultants and our professional workflow ensure a smooth and efficient process for every customer.
+                        Our team of <span style="color: #d98236;">experienced consultants</span> and our <span style="color: #d98236;">professional workflow</span> ensure a smooth and efficient process for every customer.
                     </p>
                     
                     <div class="about-stats">
@@ -179,8 +321,8 @@
                             <span class="stat-label">Customer Support</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">100% Trusted</span>
-                            <span class="stat-label">Service</span>
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Trusted Service</span>
                         </div>
                     </div>
                 </div>
@@ -237,6 +379,12 @@
                 
             </span>
         </div>
+
+        <!-- Call-to-Action Banner -->
+        <section class="cta-banner text-center py-5">
+            <h2 class="mb-3">Ready to find your next home?</h2>
+            <a th:href="@{/apartments}" class="btn btn-light btn-lg">See Available Apartments</a>
+        </section>
     </div>
 </body>
 </html>

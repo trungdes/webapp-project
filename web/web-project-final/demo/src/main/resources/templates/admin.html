@@ -197,6 +197,60 @@
                         <i class="bi bi-plus-lg"></i> Add New Apartment
                     </button>
                 </div>
+                <!-- For Sale Apartments Table -->
+                <h4 class="mb-3">For Sale</h4>
+                <div class="table-responsive mb-5">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Apartment</th>
+                                <th>Building</th>
+                                <th>Bedrooms</th>
+                                <th>Bathrooms</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="apartment : ${apartments}" th:if="${apartment.type} == 'SALE'">
+                                <td th:text="${apartment.apartmentNumber}">A101</td>
+                                <td th:text="${'Apartment ' + apartment.apartmentNumber}">Luxury Suite</td>
+                                <td th:text="${apartment.building != null ? apartment.building.address : 'N/A'}">Landmark 81</td>
+                                <td th:text="${apartment.bedrooms}">3</td>
+                                <td th:text="${apartment.bathrooms}">2</td>
+                                <td th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}">$1,200,000</td>
+                                <td>For Sale</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary btn-edit-apartment"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editApartmentModal"
+                                        th:attr="data-apartment-number=${apartment.apartmentNumber},
+                                                 data-building-id=${apartment.building != null ? apartment.building.buildingId : ''},
+                                                 data-building-address=${apartment.building != null ? apartment.building.address : ''},
+                                                 data-price=${apartment.price},
+                                                 data-bedrooms=${apartment.bedrooms},
+                                                 data-bathrooms=${apartment.bathrooms},
+                                                 data-area=${apartment.area},
+                                                 data-description=${apartment.description},
+                                                 data-type=${apartment.type}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form th:action="@{/admin/delete-apartment}" method="post" style="display:inline;"
+                                          onsubmit="return confirm('Are you sure you want to delete this apartment?');">
+                                        <input type="hidden" name="apartmentNumber" th:value="${apartment.apartmentNumber}" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- For Lease Apartments Table -->
+                <h4 class="mb-3">For Lease</h4>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
@@ -212,14 +266,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="apartment : ${apartments}">
+                            <tr th:each="apartment : ${apartments}" th:if="${apartment.type} == 'RENT'">
                                 <td th:text="${apartment.apartmentNumber}">A101</td>
                                 <td th:text="${'Apartment ' + apartment.apartmentNumber}">Luxury Suite</td>
                                 <td th:text="${apartment.building != null ? apartment.building.address : 'N/A'}">Landmark 81</td>
                                 <td th:text="${apartment.bedrooms}">3</td>
                                 <td th:text="${apartment.bathrooms}">2</td>
                                 <td th:text="${#numbers.formatDecimal(apartment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}">$1,200,000</td>
-                                <td th:text="${apartment.type == 'RENT' ? 'For Lease' : 'For Sale'}">For Sale</td>
+                                <td>For Lease</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary btn-edit-apartment"
                                         data-bs-toggle="modal"
@@ -309,9 +363,12 @@
                                         <input type="hidden" name="leaseId" th:value="${lease.leaseId}" />
                                         <button type="submit" class="btn btn-sm btn-danger ms-1">Reject</button>
                                     </form>
-                                    <form th:action="@{/admin/lease-delete}" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa hợp đồng này?');">
+                                    <form th:action="@{/admin/lease-delete}" method="post" style="display:inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this lease agreement?');">
                                         <input type="hidden" name="leaseId" th:value="${lease.leaseId}" />
-                                        <button type="submit" class="btn btn-sm btn-danger ms-1"><i class="bi bi-trash"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-danger ms-1">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

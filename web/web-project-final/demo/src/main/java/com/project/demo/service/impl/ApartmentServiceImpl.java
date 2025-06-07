@@ -126,4 +126,13 @@ public class ApartmentServiceImpl implements ApartmentService {
     public Apartment findById(String apartmentNumber) {
         return apartmentRepository.findById(apartmentNumber).orElse(null);
     }
+
+    @Override
+    public void updateApartmentStatus(String apartmentNumber, String status) {
+        Apartment apartment = findById(apartmentNumber);
+        if (apartment != null) {
+            apartment.setStatus(status);
+            apartmentRepository.save(apartment);
+        }
+    }
 }

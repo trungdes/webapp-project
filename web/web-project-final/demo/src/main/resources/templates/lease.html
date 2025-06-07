@@ -54,6 +54,14 @@
                 background: #cbd5e0;
                 color: #2d3748;
             }
+            .card-img-top {
+                width: 100%;
+                height: 260px;
+                object-fit: cover;
+                object-position: center;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+            }
         </style>
     </th:block>
 </head>
@@ -75,7 +83,7 @@
                 <form class="filter-form" th:action="@{/lease}" method="get">
                     <h3 class="filter-title">Filter Rental Apartments</h3>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="filter-group">
                                 <label class="filter-label">Bedrooms</label>
                                 <select class="form-select" name="bedrooms">
@@ -87,7 +95,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="filter-group">
                                 <label class="filter-label">Bathrooms</label>
                                 <select class="form-select" name="bathrooms">
@@ -98,28 +106,17 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="filter-group">
-                                <label class="filter-label">Monthly Rent</label>
+                                <label class="filter-label">Price Range</label>
                                 <select class="form-select" name="priceRange">
                                     <option value="">Any</option>
-                                    <option value="0-10000000">Under 10M VND</option>
+                                    <option value="0-5000000">Under 5M VND</option>
+                                    <option value="5000000-10000000">5M - 10M VND</option>
                                     <option value="10000000-20000000">10M - 20M VND</option>
                                     <option value="20000000-50000000">20M - 50M VND</option>
                                     <option value="50000000-100000000">50M - 100M VND</option>
-                                    <option value="100000000-999999999">100M+ VND</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="filter-group">
-                                <label class="filter-label">Location</label>
-                                <select class="form-select" name="location">
-                                    <option value="">Any</option>
-                                    <option value="district1">District 1</option>
-                                    <option value="district2">District 2</option>
-                                    <option value="district3">District 3</option>
-                                    <option value="district7">District 7</option>
+                                    <option value="100000000-999999999">Over 100M VND</option>
                                 </select>
                             </div>
                         </div>
@@ -169,6 +166,28 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-5">
+                    <nav aria-label="Lease apartment pagination">
+                        <ul class="pagination">
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                <a class="page-link" th:href="@{/lease(page=${currentPage - 1}, size=12)}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:classappend="${currentPage == i} ? 'active'">
+                                <a class="page-link" th:href="@{/lease(page=${i}, size=12)}" th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                <a class="page-link" th:href="@{/lease(page=${currentPage + 1}, size=12)}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </section>

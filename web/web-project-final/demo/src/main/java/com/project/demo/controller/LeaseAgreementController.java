@@ -38,6 +38,11 @@ public class LeaseAgreementController {
         // Save lease agreement
         LeaseAgreement savedAgreement = leaseAgreementService.saveLeaseAgreement(leaseAgreement);
         
+        // Update apartment status to PENDING
+        if (leaseAgreement.getApartment() != null) {
+            apartmentService.updateApartmentStatus(leaseAgreement.getApartment().getApartmentNumber(), "PENDING");
+        }
+        
         // Create notification for admin
         Notification notification = Notification.builder()
             .apartment(leaseAgreement.getApartment())
